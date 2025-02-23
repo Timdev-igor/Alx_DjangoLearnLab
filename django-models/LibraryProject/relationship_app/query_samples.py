@@ -49,6 +49,9 @@ def get_books_in_library(library_name):
 def get_books_by_author(author_name):
     author = Author.objects.get(name=author_name)
     return Book.objects.filter(author=author)
+    
+def get_librarian_for_library(library_name):
+    return Librarian.objects.get(library__name=library_name)
 
 
 # Use delete() for bulk deletions instead of looping through objects
