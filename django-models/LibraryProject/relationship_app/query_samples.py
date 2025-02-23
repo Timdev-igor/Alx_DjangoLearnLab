@@ -1,4 +1,4 @@
-from .models import Author, Book, Library
+from .models import Author, Book, Library,librarian
 # Use select_related() to reduce queries for ForeignKey relationships
 def get_books_with_authors():
     return Book.objects.select_related('author').all()
