@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookshelf', 
-    'movie_app', 
+    'relationship_app.apps.RelationshipAppConfig',
 
 ]
 
