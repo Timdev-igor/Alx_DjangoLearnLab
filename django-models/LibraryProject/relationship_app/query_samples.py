@@ -20,6 +20,11 @@ print(f"Librarian of {library_name}: {librarian}")
 """
 from .models import Author, Book, Library, Librarian
 
+def create_author(author_name):
+    author = Author.objects.get_or_create(name=author_name)
+    return author  # Returns the author instance
+
+
 # Query all books by a specific author
 def get_books_by_author(author_name):
     author = Author.objects.get(name=author_name)  # Retrieve author object
