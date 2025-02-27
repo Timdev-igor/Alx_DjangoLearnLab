@@ -71,7 +71,7 @@ class registerView(CreateView):
         UserProfile.objects.create(user=user, role='Member')  # Default role: Member
         return response
 
-  # Redirect to login page after logout
+  # Redirect to login page after logout 
 
 class SignUpView(CreateView):
     form_class = UserCreationForm
