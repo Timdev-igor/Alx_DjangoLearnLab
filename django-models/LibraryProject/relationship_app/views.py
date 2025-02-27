@@ -44,7 +44,7 @@ def list_books(request):
     books = Book.objects.all()
     authors = Author.objects.all()
     context = {'list_books': books, 'author_list': authors}
-    return render(request, 'books/list_books.html', context)
+    return render(request, 'relationship_app/list_books.html', context)
 
 class LibraryDetailView(DetailView):
     model = Library
