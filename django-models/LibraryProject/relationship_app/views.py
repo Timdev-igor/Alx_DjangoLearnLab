@@ -3,7 +3,7 @@ from django.views.generic.detail import DetailView
 from .models import Library
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView,TemplateView
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import  UserCreationForm
 from django.urls import reverse_lazy
 from django.contrib.auth import login, logout
 
