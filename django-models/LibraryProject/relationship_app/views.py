@@ -16,7 +16,7 @@ def book_list(request):
     books = Book.objects.all()
     authors = Author.objects.all()
     context = {'book_list': books, 'author_list': authors}
-    return render(request, 'books/book_list.html', context)
+    return render(request, 'relationship_app/book_list.html', context)
 
 class LibraryDetailView(DetailView):
     model = Library
@@ -26,14 +26,14 @@ class LibraryDetailView(DetailView):
 # User login view
 
 class CustomLoginView(LoginView):
-    template_name = 'authentication/login.html'
+    template_name = 'relationship_app/login.html'
 
 class CustomLogoutView(LogoutView):
-    template_name = 'authentication/logout.html'
+    template_name = 'relationship_app/logout.html'
 
 class registerView(CreateView):
     form_class = UserCreationForm
-    template_name = 'authentication/register.html'
+    template_name = 'relationship_app/register.html'
     success_url = reverse_lazy('login')
 
   # Redirect to login page after logout
@@ -41,4 +41,4 @@ class registerView(CreateView):
 class SignUpView(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy("login")
-    template_name = "authentication/signup.html"
+    template_name = "relationship_app/signup.html"
