@@ -59,7 +59,7 @@ TEMPLATES = [
     
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "Templates", BASE_DIR /  "relationship_app/Templates"],
+        'DIRS': [BASE_DIR / "templates", BASE_DIR /  "relationship_app/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
