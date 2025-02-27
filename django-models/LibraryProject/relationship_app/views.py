@@ -77,7 +77,7 @@ class registerView(CreateView):
         UserProfile.objects.create(user=user, role='Member')  # Create a user profile
         login(self.request, user)  # Log in the user immediately after registration
         return response  
-    
+
 class SignUpView(CreateView):
     form_class = UserCreationForm
     template_name = 'relationship_app/signup.html'  # Make sure you have this template
