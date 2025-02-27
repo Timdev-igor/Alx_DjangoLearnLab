@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render , redirect
 from django.views.generic.detail import DetailView
-from .models import Library
+from .models import Library, UserProfile
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView,TemplateView
 from django.urls import reverse_lazy
@@ -63,6 +63,13 @@ class registerView(CreateView):
     form_class = UserCreationForm
     template_name = 'relationship_app/register.html'
     success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Manually create UserProfile after the User is saved
+        user = self.object
+        UserProfile.objects.create(user=user, role='Member')  # Default role: Member
+        return response
 
   # Redirect to login page after logout
 
