@@ -77,3 +77,16 @@ class registerView(CreateView):
         UserProfile.objects.create(user=user, role='Member')  # Create a user profile
         login(self.request, user)  # Log in the user immediately after registration
         return response  
+    
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'relationship_app/signup.html'  # Make sure you have this template
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        # Optionally, you can perform some additional logic here, like setting roles
+        response = super().form_valid(form)
+        user = self.object
+        # Create a default user profile with 'Member' role
+        UserProfile.objects.create(user=user, role='Member')
+        return response
