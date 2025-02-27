@@ -46,11 +46,11 @@ def member_view(request):
     return render(request, "relationship_app/member_view.html")
 
 # Functional View: List Books
-def add_book(request):
+def list_books(request):
     books = Book.objects.all()
     authors = Author.objects.all()
-    context = {'add_book': books, 'author_list': authors}
-    return render(request, 'relationship_app/add_book.html', context)
+    context = {'list_books': books, 'author_list': authors}
+    return render(request, 'relationship_app/list_books.html', context)
 
 # Detail View for Library
 class LibraryDetailView(DetailView):

@@ -45,8 +45,8 @@ def get_librarian_for_library(library_name):
     library = Library.objects.get(name=library_name)
     return Librarian.objects.get(library=library)
 
-def add_book(request):
+def book_list(request):
     """Retrieves all books and renders a template displaying the list."""
     books = Book.objects.all()  # Fetch all book instances from the database
-    context = {'add_book': books}  # Create a context dictionary with book list
-    return render(request, 'relationhip_app/add_book.html', context)
+    context = {'book_list': books}  # Create a context dictionary with book list
+    return render(request, 'relationship_app/book_list.html', context)
