@@ -55,9 +55,11 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'LibraryProject.urls'
 
 TEMPLATES = [
+   
+    
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "Templates", BASE_DIR /  "relationship_app/Templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,5 +127,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_REDIRECT_URL =  '/accounts/profile'
+LOGOUT_REDIRECT_URL = '/accounts/login/'

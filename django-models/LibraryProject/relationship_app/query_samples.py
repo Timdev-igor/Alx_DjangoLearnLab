@@ -18,7 +18,14 @@ print(f"Books in {library_name}:", list(books_in_library))
 librarian = Librarian.objects.get(library=library)
 print(f"Librarian of {library_name}: {librarian}")
 """
+
 from .models import Author, Book, Library, Librarian
+from django.shortcuts import render
+
+def create_book(title, author_name):
+    author = create_author(author_name)  # Ensure the author exists
+    book = Book.objects.create(title=title, author=author)
+    return book
 
 def create_author(author_name):
     author = Author.objects.get_or_create(name=author_name)
@@ -38,4 +45,10 @@ def get_books_in_library(library_name):
 
 # Retrieve the librarian for a library
 def get_librarian_for_library(library):
-    return Librarian.objects.get(library=library)  
+    return Librarian.objects.get(library=library) 
+
+def book_list(request):
+    """Retrieves all books and renders a template displaying the list."""
+    books = Book.objects.all()# Fetch all book instances from the database
+    context = {'book_list': books}# Create a context dictionary with book list
+    return render(request, 'books/book_list.html',context)

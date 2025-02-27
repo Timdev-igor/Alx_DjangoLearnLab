@@ -2,18 +2,21 @@ from django.shortcuts import render , redirect
 from django.views.generic.detail import DetailView
 from .models import Library
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import CreateView
-from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import CreateView,TemplateView
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.urls import reverse_lazy
+from django.contrib.auth import login, logout
+
 # Create your views here.
 from django.shortcuts import render
-from .models import Book
+from .models import Book , Author
 
-def list_books(request):
+#used some functional based views
+def book_list(request):
     books = Book.objects.all()
-    return render(request, "relationship_app/list_books.html", {"books": books})
-
-
+    authors = Author.objects.all()
+    context = {'book_list': books, 'author_list': authors}
+    return render(request, 'books/book_list.html', context)
 
 class LibraryDetailView(DetailView):
     model = Library
@@ -32,3 +35,10 @@ class RegisterView(CreateView):
     form_class = UserCreationForm
     template_name = 'authentication/register.html'
     success_url = reverse_lazy('login')
+
+  # Redirect to login page after logout
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy("login")
+    template_name = "authentication/signup.html"
