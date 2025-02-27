@@ -1,79 +1,79 @@
+from django.contrib.auth import login  
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render , redirect
+from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
-from .models import Library, UserProfile
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import CreateView,TemplateView
+from django.views.generic import CreateView, TemplateView
 from django.urls import reverse_lazy
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import user_passes_test, login_required
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import Book, Author, Library, UserProfile
 
-# Create your views here.
-from django.shortcuts import render
-from .models import Book , Author
+# Ensure UserProfile is created when a User is registered
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
 
+# Role Check Functions
 def is_admin(user):
-    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+    return hasattr(user, "userprofile") and user.userprofile.role == "Admin"
 
 def is_librarian(user):
-    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+    return hasattr(user, "userprofile") and user.userprofile.role == "Librarian"
 
 def is_member(user):
-    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+    return hasattr(user, "userprofile") and user.userprofile.role == "Member"
 
-# Admin view
-@login_required
+# Role-Based Views
 @user_passes_test(is_admin)
+@login_required
 def admin_view(request):
-    return render(request, "roles/admin_view.html")
+    return render(request, "relationship_app/admin_view.html")
 
-# Librarian view
-@login_required
 @user_passes_test(is_librarian)
-def librarian_view(request):
-    return render(request, "roles/librarian_view.html")
-
-# Member view
 @login_required
-@user_passes_test(is_member)
-def member_view(request):
-    return render(request, "roles/member_view.html")
+def librarian_view(request):
+    return render(request, "relationship_app/librarian_view.html")
 
-#used some functional based views
+@user_passes_test(is_member)
+@login_required
+def member_view(request):
+    return render(request, "relationship_app/member_view.html")
+
+# Functional View: List Books
 def list_books(request):
     books = Book.objects.all()
     authors = Author.objects.all()
     context = {'list_books': books, 'author_list': authors}
     return render(request, 'relationship_app/list_books.html', context)
 
+# Detail View for Library
 class LibraryDetailView(DetailView):
     model = Library
     template_name = "relationship_app/library_detail.html"
     context_object_name = "library"
 
-# User login view
-
+# User Authentication Views
 class CustomLoginView(LoginView):
     template_name = 'relationship_app/login.html'
 
 class CustomLogoutView(LogoutView):
     template_name = 'relationship_app/logout.html'
 
+# User Registration View
 class registerView(CreateView):
     form_class = UserCreationForm
     template_name = 'relationship_app/register.html'
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        # Manually create UserProfile after the User is saved
-        user = self.object
-        UserProfile.objects.create(user=user, role='Member')  # Default role: Member
-        return response
-
-  # Redirect to login page after logout 
-
-class SignUpView(CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy("login")
-    template_name = "relationship_app/signup.html"
+        response = super().form_valid(form)  # Calls the parent class method to save the form
+        user = self.object  # The created user
+        UserProfile.objects.create(user=user, role='Member')  # Create a user profile
+        login(self.request, user)  # Log in the user immediately after registration
+        return response  
