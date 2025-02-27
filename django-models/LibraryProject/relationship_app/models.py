@@ -10,7 +10,6 @@ from django.dispatch import receiver
 
 # Define user roles
 class UserProfile(models.Model):
-
     ADMIN = 'Admin'
     LIBRARIANS = 'Librarians'  # Renamed to uppercase to match Python naming conventions
     MEMBER = 'Member'
@@ -35,7 +34,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.userprofile.save()
+    instance.UserProfile.save()
 
 
 class Author(models.Model):
