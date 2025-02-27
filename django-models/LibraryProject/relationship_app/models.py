@@ -10,9 +10,15 @@ from django.dispatch import receiver
 
 # Define user roles
 class UserProfile(models.Model):
+
+    ADMIN = 'Admin'
+    LIBRARIANS = 'Librarians'  # Renamed to uppercase to match Python naming conventions
+    MEMBER = 'Member'
+
     ROLE_CHOICES = [
-        ("Admin", "Admin"),
-        ("Member", "Member"),
+        (ADMIN, 'Admin'),
+        (LIBRARIANS, 'Librarians'),  # Same here, use uppercase for consistency
+        (MEMBER, 'Member'),
     ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
