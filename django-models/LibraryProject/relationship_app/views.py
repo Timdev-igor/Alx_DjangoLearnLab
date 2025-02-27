@@ -12,10 +12,10 @@ from django.shortcuts import render
 from .models import Book , Author
 
 #used some functional based views
-def book_list(request):
+def list_books(request):
     books = Book.objects.all()
     authors = Author.objects.all()
-    context = {'book_list': books, 'author_list': authors}
+    context = {'list_books': books, 'author_list': authors}
     return render(request, 'relationship_app/list_books.html', context)
 
 class LibraryDetailView(DetailView):
