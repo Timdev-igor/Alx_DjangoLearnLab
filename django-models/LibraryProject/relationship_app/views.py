@@ -21,19 +21,18 @@ def is_member(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
 
 # Admin View
-@user_passes_test(is_admin)
+# Views
+@user_passes_test(is_admin, login_url='/login/')
 def admin_view(request):
-    return HttpResponse("Welcome, Admin! You have access to the admin view.")
+    return render(request, 'relationship_app/admin_view.html')
 
-# Librarian View
-@user_passes_test(is_librarian)
+@user_passes_test(is_librarian, login_url='/login/')
 def librarian_view(request):
-    return HttpResponse("Welcome, Librarian! You have access to the librarian view.")
+    return render(request, 'relationship_app/librarian_view.html')
 
-# Member View
-@user_passes_test(is_member)
+@user_passes_test(is_member, login_url='/login/')
 def member_view(request):
-    return HttpResponse("Welcome, Member! You have access to the member view.")
+    return render(request, 'relationship_app/member_view.html')
 
 # User Registration View
 def register(request):
