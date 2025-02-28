@@ -27,8 +27,8 @@ urlpatterns = [
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
 
 
-    path('books/', list_books, name='list_books'),  # View all books
-    path('books/add/', add_book, name='add_book'),  # Add a new book
-    path('books/edit/<int:book_id>/', edit_book, name='edit_book'),  # Edit a book
-    path('books/delete/<int:book_id>/', delete_book, name='delete_book'),
+    path("books/", list_books, name="list_books"),  # ✅ View all books
+    path("books/add/", add_book, name="add_book"),  # ✅ Add a book
+    path("books/edit/<int:book_id>/", edit_book, name="edit_book"),  # ✅ Edit a book
+    path("books/delete/<int:book_id>/", delete_book, name="delete_book"),  #
 ]
