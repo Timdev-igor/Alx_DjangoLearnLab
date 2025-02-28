@@ -10,7 +10,7 @@ from django.contrib.auth import login  # Import for handling user login
 from django.contrib.auth.forms import UserCreationForm  # Import for user registration form
 from .models import UserProfile
 from .models import Book
-from django.views.generic import DetailView
+from django.views.generic.detail import DetailView 
 from .models import Library
 # Role-checking functions
 def is_admin(user):
