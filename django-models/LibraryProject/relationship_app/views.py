@@ -12,8 +12,9 @@ from .models import UserProfile
 from .models import Book
 from django.views.generic.detail import DetailView 
 from .models import Library
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django import forms
+from django.contrib.auth.decorators import permission_required
 
 
 # Role-checking functions
