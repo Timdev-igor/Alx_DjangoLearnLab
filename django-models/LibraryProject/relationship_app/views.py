@@ -9,7 +9,9 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import login  # Import for handling user login
 from django.contrib.auth.forms import UserCreationForm  # Import for user registration form
 from .models import UserProfile
-
+from .models import Book
+from django.views.generic import DetailView
+from .models import Library
 # Role-checking functions
 def is_admin(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
@@ -49,3 +51,13 @@ def register(request):
     return render(request, 'relationship_app/register.html', {'form': form})
 
 # Role-checking functions
+
+def list_books(request):
+    books = Book.objects.all()  # Fetch all books from the database
+    return render(request, 'relationship_app/list_books.html', {'books': books})
+
+
+class LibraryDetailView(DetailView):
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'
