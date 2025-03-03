@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import list_books , add_book, edit_book, delete_book
+from .views import book_list , add_book, edit_book, delete_book
 from django.contrib.auth.views import LoginView, LogoutView 
 from .views import LibraryDetailView ,SignUpView
 from . import views  
@@ -29,7 +29,7 @@ urlpatterns = [
 
     path("add_book/", add_book, name="add_book"),  # ✅ Explicitly matches "add_book/"
     path("edit_book/<int:book_id>/", edit_book, name="edit_book"),  # ✅ Explicitly matches "edit_book/"
-    path("books/", views.book_list, name="list_books"),
+    path("books/", views.book_list, name="book_list"),
     path("delete_book/<int:book_id>/", delete_book, name="delete_book"),#
      path('example-form/', views.example_form_view, name='example_form')
 ]

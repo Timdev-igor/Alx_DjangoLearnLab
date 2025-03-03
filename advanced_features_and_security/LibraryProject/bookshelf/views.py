@@ -33,15 +33,15 @@ def is_member(user):
 # Views
 @user_passes_test(is_admin, login_url='/login/')
 def admin_view(request):
-    return render(request, 'relationship_app/admin_view.html')
+    return render(request, 'bookshelf/admin_view.html')
 
 @user_passes_test(is_librarian, login_url='/login/')
 def librarian_view(request):
-    return render(request, 'relationship_app/librarian_view.html')
+    return render(request, 'bookshelf/librarian_view.html')
 
 @user_passes_test(is_member, login_url='/login/')
 def member_view(request):
-    return render(request, 'relationship_app/member_view.html')
+    return render(request, 'bookshelf/member_view.html')
 
 # User Registration View
 
@@ -49,12 +49,12 @@ def member_view(request):
 @login_required
 def book_list(request):
     books = Book.objects.all()  # Fetch all books from the database
-    return render(request, 'relationship_app/list_books.html', {'books': books})
+    return render(request, 'bookshelf/book_list.html', {'books': books})
 
 
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = 'relationship_app/library_detail.html'
+    template_name = 'bookshelf/library_detail.html'
     context_object_name = 'library'
 
 class SignUpView(CreateView):
@@ -80,7 +80,7 @@ def add_book(request):
             return redirect('list_books')
     else:
         form = BookForm()
-    return render(request, 'relationship_app/book_form.html', {'form': form})
+    return render(request, 'bookshelf/book_form.html', {'form': form})
 
 # Edit a book (requires 'can_change_book' permission)**
 @permission_required('relationship_app.can_change_book', raise_exception=True)
@@ -93,7 +93,7 @@ def edit_book(request, book_id):
             return redirect('list_books')
     else:
         form = BookForm(instance=book)
-    return render(request, 'relationship_app/book_form.html', {'form': form})
+    return render(request, 'bookshelf/book_form.html', {'form': form})
 
 # Delete a book (requires 'can_delete_book' permission)**
 @permission_required('relationship_app.can_delete_book', raise_exception=True)
@@ -102,7 +102,7 @@ def delete_book(request, book_id):
     if request.method == 'POST':
         book.delete()
         return redirect('list_books')
-    return render(request, 'relationship_app/confirm_delete.html', {'book': book})
+    return render(request, 'bookshelf/confirm_delete.html', {'book': book})
 
 @login_required
 @permission_required('relationship_app.can_view', raise_exception=True)
@@ -162,6 +162,6 @@ def example_form_view(request):
             return redirect('success_page')  # Redirect to a success page
     else:
         form = ExampleForm()
-    return render(request, 'relationship_app/example_form.html', {'form': form})
+    return render(request, 'bookshelf/example_form.html', {'form': form})
 
 
