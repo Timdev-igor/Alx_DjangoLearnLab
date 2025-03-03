@@ -70,6 +70,9 @@ class BookForm(forms.ModelForm):
 # Add a book (requires 'can_add_book' permission)**
 @permission_required('relationship_app.can_add_book', raise_exception=True)
 def add_book(request):
+    """
+    View to add a new book. Only users with the 'can_add_book' permission can access this view.
+    """
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
@@ -134,4 +137,15 @@ def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     post.delete()
     return redirect('view_posts')
+
+def search_books(request):
+    query = request.GET.get('q')
+    if query:
+        # Use Django ORM to safely query the database
+        books = Book.objects.filter(title__icontains=query)
+    else:
+        books = Book.objects.all()
+    return render(request, 'bookshelf/book_list.html', {'books': books})
+
+
 
