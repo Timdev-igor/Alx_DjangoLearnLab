@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from django.contrib.auth.decorators import permission_required
 from .models import Post
-
+from .forms import ExampleForm
 
 # Role-checking functions
 # Role-checking functions
@@ -147,5 +147,21 @@ def search_books(request):
         books = Book.objects.all()
     return render(request, 'bookshelf/book_list.html', {'books': books})
 
+def example_form_view(request):
+    """
+    View to handle the ExampleForm.
+    """
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Process the form data (e.g., save to the database or send an email)
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            print(f"Name: {name}, Email: {email}, Message: {message}")  # Example processing
+            return redirect('success_page')  # Redirect to a success page
+    else:
+        form = ExampleForm()
+    return render(request, 'relationship_app/example_form.html', {'form': form})
 
 

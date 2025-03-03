@@ -25,3 +25,30 @@ class UserRegisterForm(UserCreationForm):
             # Create a UserProfile for the user with the selected role
             UserProfile.objects.create(user=user, role=self.cleaned_data['role'])
         return user
+    
+class ExampleForm(forms.Form):
+    """
+    Example form for demonstration purposes.
+    """
+    name = forms.CharField(
+        label="Your Name",
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your name'})
+    )
+    email = forms.EmailField(
+        label="Your Email",
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'})
+    )
+    message = forms.CharField(
+        label="Your Message",
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter your message'})
+    )
+
+    def clean_name(self):
+        """
+        Custom validation for the 'name' field.
+        """
+        name = self.cleaned_data['name']
+        if len(name) < 3:
+            raise forms.ValidationError("Name must be at least 3 characters long.")
+        return name

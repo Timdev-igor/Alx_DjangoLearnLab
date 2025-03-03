@@ -31,4 +31,5 @@ urlpatterns = [
     path("edit_book/<int:book_id>/", edit_book, name="edit_book"),  # ✅ Explicitly matches "edit_book/"
     path("books/", views.book_list, name="list_books"),
     path("delete_book/<int:book_id>/", delete_book, name="delete_book"),#
+     path('example-form/', views.example_form_view, name='example_form')
 ]
