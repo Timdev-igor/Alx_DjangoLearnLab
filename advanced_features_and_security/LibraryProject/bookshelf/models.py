@@ -71,7 +71,20 @@ def set_default_role(sender, instance, created, **kwargs):
         instance.role = CustomUser.MEMBER
         instance.save()
 
+#////////////////////////////////////////////////////////////////////////////////////
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
 
+    class Meta:
+        permissions = [
+            ("can_view", "Can view post"),
+            ("can_create", "Can create post"),
+            ("can_edit", "Can edit post"),
+            ("can_delete", "Can delete post"),
+        ]
+
+ 
 # Author Model
 class Author(models.Model):
     name = models.CharField(max_length=255)

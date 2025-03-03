@@ -16,6 +16,7 @@ from .models import Library
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.contrib.auth.decorators import permission_required
+from .models import Post
 
 
 # Role-checking functions
@@ -99,4 +100,38 @@ def delete_book(request, book_id):
         book.delete()
         return redirect('list_books')
     return render(request, 'relationship_app/confirm_delete.html', {'book': book})
+
+@login_required
+@permission_required('relationship_app.can_view', raise_exception=True)
+def view_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    return render(request, 'post_detail.html', {'post': post})
+
+@login_required
+@permission_required('relationship_app.can_create', raise_exception=True)
+def create_post(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        Post.objects.create(title=title, content=content)
+        return redirect('view_posts')
+    return render(request, 'create_post.html')
+
+@login_required
+@permission_required('relationship_app.can_edit', raise_exception=True)
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        post.title = request.POST.get('title')
+        post.content = request.POST.get('content')
+        post.save()
+        return redirect('view_post', post_id=post.id)
+    return render(request, 'edit_post.html', {'post': post})
+
+@login_required
+@permission_required('relationship_app.can_delete', raise_exception=True)
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.delete()
+    return redirect('view_posts')
 
