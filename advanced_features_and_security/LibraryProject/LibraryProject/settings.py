@@ -141,7 +141,8 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Enforce HTTPS for cookies
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-
+# Enable the browser’s XSS filtering and help prevent cross-site scripting attacks
+SECURE_BROWSER_XSS_FILTER = True
 # Redirect all non-HTTPS requests to HTTPS
 SECURE_SSL_REDIRECT = True
 
@@ -154,3 +155,10 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'",)
 CSP_STYLE_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'",)
+
+SECURE_SSL_REDIRECT = True
+
+# Enable HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
