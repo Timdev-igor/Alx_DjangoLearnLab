@@ -9,7 +9,7 @@ from django.contrib.auth import views as auth_views
 #python manage.py makemigrations
 urlpatterns = [
     path("library/<int:pk>/", LibraryDetailView.as_view(), name="library_detail"),
-    path('books/', list_books, name='list_books'),
+    path('books/', views.book_list, name='book_list'),
     path("login/", LoginView.as_view(template_name="authentication/login.html"), name="login"),
     path("logout/", LogoutView.as_view(template_name="authentication/logout.html"), name="logout"),
 
@@ -29,6 +29,6 @@ urlpatterns = [
 
     path("add_book/", add_book, name="add_book"),  # ✅ Explicitly matches "add_book/"
     path("edit_book/<int:book_id>/", edit_book, name="edit_book"),  # ✅ Explicitly matches "edit_book/"
-    path("books/", list_books, name="list_books"),
+    path("books/", views.book_list, name="list_books"),
     path("delete_book/<int:book_id>/", delete_book, name="delete_book"),#
 ]

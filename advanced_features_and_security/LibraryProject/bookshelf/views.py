@@ -47,7 +47,7 @@ def member_view(request):
 
 # Role-checking functions
 @login_required
-def list_books(request):
+def book_list(request):
     books = Book.objects.all()  # Fetch all books from the database
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
