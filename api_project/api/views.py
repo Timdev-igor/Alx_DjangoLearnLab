@@ -1,15 +1,16 @@
-from rest_framework.generics import ListAPIView 
+from rest_framework import generics, viewsets
 from django.shortcuts import render
 from .models import Book
 from .serializers import BookSerializer
-from rest_framework.viewsets import ModelViewSet
 
 
-# Create your views here.
-class BookList(ListAPIView):
+
+# ListAPIView for listing books
+class BookList(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class BookViewSet(ModelViewSet):  # ✅ This ensures all CRUD operations are handled
+# ViewSet for CRUD operations
+class BookViewSet(viewsets.ModelViewSet):  
     queryset = Book.objects.all()
     serializer_class = BookSerializer
