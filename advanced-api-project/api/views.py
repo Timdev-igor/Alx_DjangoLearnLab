@@ -3,6 +3,7 @@ from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Book
 from .serializers import BookSerializer
+from django_filters import rest_framework as filters
 
 # ListView: Retrieve all books with filtering, searching, and ordering
 class BookListView(generics.ListAPIView):
