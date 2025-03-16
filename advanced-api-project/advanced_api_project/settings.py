@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import sys
 
 from pathlib import Path
 
@@ -80,7 +81,11 @@ WSGI_APPLICATION = 'advanced_api_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # Your main database
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.sqlite3',  # Use SQLite for testing
+        'NAME': BASE_DIR / 'test_db.sqlite3',  # Path to the test database file
     }
 }
 
@@ -125,3 +130,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+if 'test' in sys.argv:
+    DATABASES['default'] = DATABASES['test']
