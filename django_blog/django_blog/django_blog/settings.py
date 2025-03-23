@@ -126,6 +126,6 @@ STATIC_URL = '/static/'
 
 # Define the static files directory explicitly
 STATICFILES_DIRS = [
-    "static",  # Looks for a 'static/' directory in the project root
+    BASE_DIR / "static", # Looks for a 'static/' directory in the project root
 ]
 
