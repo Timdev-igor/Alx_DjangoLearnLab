@@ -3,8 +3,20 @@
   <h1>{{ post.title }}</h1>
   <p>{{ post.content }}</p>
   <small>Posted by {{ post.author }} on {{ post.date_posted }}</small>
-  {% if user == post.author %}
-    <a href="{% url 'post-update' post.id %}">Edit</a>
-    <a href="{% url 'post-delete' post.id %}">Delete</a>
+
+  <h2>Comments</h2>
+  {% for comment in post.comments.all %}
+    <div>
+      <p>{{ comment.content }}</p>
+      <small>By {{ comment.author }} on {{ comment.created_at }}</small>
+      {% if user == comment.author %}
+        <a href="{% url 'comment-update' comment.id %}">Edit</a>
+        <a href="{% url 'comment-delete' comment.id %}">Delete</a>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+    <a href="{% url 'add-comment' post.id %}">Add a Comment</a>
   {% endif %}
 {% endblock %}
