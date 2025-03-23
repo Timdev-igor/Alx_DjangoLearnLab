@@ -13,9 +13,12 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-    
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True)  # Used in URLs
 
-
+    def __str__(self):
+        return self.name
 
 class Post(models.Model):
     title=models.CharField(max_length=200)

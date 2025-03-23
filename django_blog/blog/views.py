@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post ,Comment
+from .models import Post ,Comment,Tag
 from django.urls import reverse_lazy
 from .forms import CommentForm
 from django.db.models import Q
@@ -135,3 +135,17 @@ def search_posts(request):
     else:
         posts = Post.objects.all()
     return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'  # Use your post listing template
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        tag = get_object_or_404(Tag, slug=tag_slug)  # Ensure the tag exists
+        return Post.objects.filter(tags=tag)  # Adjust based on your model relation
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = get_object_or_404(Tag, slug=self.kwargs.get('tag_slug'))
+        return context
