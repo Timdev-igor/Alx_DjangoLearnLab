@@ -1,0 +1,21 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<h2>Profile</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <fieldset>
+        <legend>User Info</legend>
+        {{ user_form.as_p }}
+    </fieldset>
+
+    <fieldset>
+        <legend>Profile Info</legend>
+        {{ profile_form.as_p }}
+    </fieldset>
+
+    <button type="submit">Update Profile</button>
+</form>
+
+{% endblock %}
