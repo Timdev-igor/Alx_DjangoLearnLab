@@ -1,30 +1,31 @@
-from django.shortcuts import render
-from rest_framework import status, permissions, viewsets
-
-from rest_framework.decorators import action
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import update_last_login
-from django.contrib.auth import get_user_model
+from django.shortcuts import render
+from rest_framework import status, permissions, viewsets, generics
+from rest_framework.decorators import action
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
 User = get_user_model()
 
-class RegisterView(generics.CreateAPIView):
+class RegisterView(generics.GenericAPIView):
+    """
+    Handles user registration.
+    """
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        user = User.objects.get(username=request.data['username'])
-        token, created = Token.objects.get_or_create(user=user)
-        response.data['token'] = token.key
-        return response
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({"user": UserSerializer(user).data, "token": token.key}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -40,14 +41,24 @@ class LoginView(APIView):
             return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProfileView(generics.RetrieveUpdateAPIView):
-    queryset = User.objects.all()
+class ProfileView(generics.GenericAPIView):
+    """
+    Handles retrieving and updating user profile.
+    """
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_object(self):
-        return self.request.user
-    
+    def get(self, request, *args, **kwargs):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        serializer = self.get_serializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -66,4 +77,3 @@ class UserViewSet(viewsets.ModelViewSet):
         user_to_unfollow = self.get_object()
         request.user.following.remove(user_to_unfollow)
         return Response({"message": f"You have unfollowed {user_to_unfollow.username}."})
-    
