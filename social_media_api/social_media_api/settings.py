@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',#added DRF
     'accounts.apps.AccountsConfig',#added app
     'rest_framework.authtoken',#added token auth
+    'posts.apps.PostsConfig',#added second app posts
+    'django_filters',#django filter app
 ]
 
 MIDDLEWARE = [
@@ -125,3 +127,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser' #Update settings.py to use the custom user model
+#enable pagination to  post and comment list endpoints to manage large datasets.
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}
