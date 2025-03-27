@@ -8,14 +8,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
-
-User = get_user_model()
+from .models import CustomUser  # ✅ Explicitly import CustomUser
 
 class RegisterView(generics.GenericAPIView):
     """
     Handles user registration.
     """
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()  # ✅ Explicit reference to CustomUser
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
@@ -60,7 +59,7 @@ class ProfileView(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()  # ✅ Explicit reference to CustomUser
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
