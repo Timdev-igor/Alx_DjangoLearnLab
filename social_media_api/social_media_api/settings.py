@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',#added token auth
     'posts.apps.PostsConfig',#added second app posts
     'django_filters',#django filter app
+    'notifications.apps.NotificationsConfig',#3rd app
 ]
 
 MIDDLEWARE = [
