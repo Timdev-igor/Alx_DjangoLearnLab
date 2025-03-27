@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from rest_framework import status, permissions, viewsets
 
-# Create your views here.
+from rest_framework.decorators import action
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import get_user_model
@@ -46,3 +47,23 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+    
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=True, methods=['POST'])
+    def follow(self, request, pk=None):
+        user_to_follow = self.get_object()
+        if user_to_follow == request.user:
+            return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.following.add(user_to_follow)
+        return Response({"message": f"You are now following {user_to_follow.username}."})
+
+    @action(detail=True, methods=['POST'])
+    def unfollow(self, request, pk=None):
+        user_to_unfollow = self.get_object()
+        request.user.following.remove(user_to_unfollow)
+        return Response({"message": f"You have unfollowed {user_to_unfollow.username}."})
+    
