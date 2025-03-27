@@ -9,6 +9,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
 
+User = get_user_model()
+
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -16,8 +18,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        Token.objects.create(user=user)
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),  # Email is optional
+            password=validated_data['password']
+        )
+        Token.objects.create(user=user)  # Create authentication token
         return user
 
 class LoginSerializer(serializers.Serializer):
