@@ -59,12 +59,25 @@ class LikePostView(generics.GenericAPIView):
         else:
             return Response({"message": "You have already liked this post"}, status=status.HTTP_400_BAD_REQUEST)
 
+class UnlikePostView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
     def delete(self, request, pk):
+        """Handles unliking a post."""
         post = generics.get_object_or_404(Post, pk=pk)
 
-        #  Check if the like exists
+        # Check if the like exists
         like = Like.objects.filter(user=request.user, post=post).first()
         if like:
             like.delete()
+
+            # Remove the like notification
+            Notification.objects.filter(
+                recipient=post.author,
+                actor=request.user,
+                verb="liked your post",
+                target=post
+            ).delete()
+
             return Response({"message": "Like removed"}, status=status.HTTP_204_NO_CONTENT)
         return Response({"message": "You haven't liked this post"}, status=status.HTTP_400_BAD_REQUEST)
