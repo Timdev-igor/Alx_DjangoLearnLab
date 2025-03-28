@@ -60,7 +60,7 @@ class LikePostView(generics.GenericAPIView):
             return Response({"message": "You have already liked this post"}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
 
         #  Check if the like exists
         like = Like.objects.filter(user=request.user, post=post).first()
