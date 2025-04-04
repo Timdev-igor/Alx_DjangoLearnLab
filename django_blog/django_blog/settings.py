@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-y4)*flu^e9wf9ym@^ud8n47=k%e936z!h$srkkxz@m49)rbvfg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['timothyandre.pythonanywhere.com']
 
 
 # Application definition
@@ -76,15 +76,7 @@ WSGI_APPLICATION = 'django_blog.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {  
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_blog_db',  
-        'USER': 'root',  
-        'PASSWORD': '17999nf$xxjw23#$%&',  
-        'HOST': 'localhost',  
-        'PORT': '3306',  
-    },
-    'sqlite_db': {  # SQLite secondary database
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / "db.sqlite3",
     }
