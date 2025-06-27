@@ -1,0 +1,14 @@
+{% extends "vagus/base.html" %}
+
+{% block content %}
+    <h1>Welcome to the Home Page</h1>
+    <p>This is a protected page. You must be logged in to view it.</p>
+
+    <ul>
+        <li><a href="{% url 'login' %}">Login</a></li>
+        <li><a href="{% url 'create_post' %}">Create Post</a></li>
+        <li><a href="{% url 'view_post' post_id=1 %}">View a Post</a> (Replace 1 with actual post ID)</li>
+        <li><a href="{% url 'edit_post' post_id=1 %}">Edit Post</a> (Replace 1 with actual post ID)</li>
+        <li><a href="{% url 'delete_post' post_id=1 %}">Delete Post</a> (Replace 1 with actual post ID)</li>
+    </ul>
+{% endblock %}

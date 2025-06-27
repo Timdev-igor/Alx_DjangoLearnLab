@@ -1,0 +1,16 @@
+{% extends 'tenet1/base.html' %}
+
+{% block title %}Book List{% endblock %}
+
+{% block content %}
+  <div class="book-list-container">
+    <h1 class="book-list-title">Book Libraries</h1>
+    <ul class="book-list">
+      {% for book in library %}
+        <li class="book-item">
+          <span class="book-title">{{ book.title }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="signup-container">
+    <h2>Sign Up</h2>
+    
+    <form method="post" class="signup-form" id="signup-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+
+    <p class="login-link">
+        Already have an account? <a href="{% url 'login' %}">Log in</a>
+    </p>
+</div>
+
+<script>
+    document.getElementById("signup-form").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        fetch("{% url 'signup' %}", {
+            method: "POST",
+            body: new FormData(this),
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;  // Redirect to profile if successful
+            } else {
+                return response.text();  // Reload page if there's an error
+            }
+        })
+        .then(html => {
+            document.body.innerHTML = html;
+        })
+        .catch(error => console.error("Error:", error));
+    });
+</script>
+
+<style>
+    .signup-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .signup-container h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .signup-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .signup-form input {
+        margin-bottom: 10px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background: #0056b3;
+    }
+
+    .login-link {
+        margin-top: 15px;
+        font-size: 14px;
+    }
+
+    .login-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
