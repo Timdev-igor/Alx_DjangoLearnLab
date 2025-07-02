@@ -1,0 +1,23 @@
+{% extends 'denver_gallery/base.html' %}
+{% block content %}
+<a class="btn btn-primary mb-3" href="{% url 'upload' %}">Upload Photo</a>
+
+<form method="get">
+  <select name="category" onchange="this.form.submit()">
+    <option value="">All Categories</option>
+    {% for cat in categories %}
+      <option value="{{ cat.id }}">{{ cat.name }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<div class="row mt-3">
+  {% for photo in photos %}
+    <div class="col-md-3 mb-3">
+      <a href="{% url 'photo_detail' photo.pk %}">
+        <img src="{{ photo.image.url }}" class="img-fluid">
+      </a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
