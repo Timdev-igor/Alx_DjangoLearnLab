@@ -13,11 +13,11 @@ def home(request):
     if category_id:
         photos = photos.filter(category_id=category_id)
     categories = Category.objects.all()
-    return render(request, 'gallery/home.html', {'photos': photos, 'categories': categories})
+    return render(request, 'denver_gallery/home.html', {'photos': photos, 'categories': categories})
 
 def photo_detail(request, pk):
     photo = get_object_or_404(Photo, pk=pk)
-    return render(request, 'gallery/photo_detail.html', {'photo': photo})
+    return render(request, 'denver_gallery/photo_detail.html', {'photo': photo})
 
 def upload_photo(request):
     if request.method == 'POST':
@@ -27,4 +27,4 @@ def upload_photo(request):
             return redirect('home')
     else:
         form = PhotoForm()
-    return render(request, 'gallery/upload.html', {'form': form})
+    return render(request, 'denver_gallery/upload.html', {'form': form})
