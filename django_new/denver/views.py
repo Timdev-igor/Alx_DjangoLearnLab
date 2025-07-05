@@ -4,7 +4,7 @@
 #create views LOG 6
 
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Photo, Category
+from .models import Photo, Category , BlogPost
 from .forms import PhotoForm
 
 def home(request):
@@ -28,3 +28,14 @@ def upload_photo(request):
     else:
         form = PhotoForm()
     return render(request, 'denver_gallery/upload.html', {'form': form})
+
+def blog_list(request):
+    posts = BlogPost.objects.all().order_by('-created_at')
+    return render(request, 'denver_blog/blog_list.html', {'posts': posts})
+
+def blog_detail(request, slug):
+    post = get_object_or_404(BlogPost, slug=slug)
+    return render(request, 'denver_blog/blog_detail.html', {'post': post})
+
+
+

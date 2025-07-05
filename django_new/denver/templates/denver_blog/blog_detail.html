@@ -1,0 +1,6 @@
+{% extends 'denver_blog/base.html' %}
+{% block content %}
+<h1>{{ post.title }}</h1>
+<img src="{{ post.image.url }}" class="img-fluid">
+<p>{{ post.description }}</p>
+{% endblock %}
