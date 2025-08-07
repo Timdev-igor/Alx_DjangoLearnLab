@@ -1,0 +1,268 @@
+/* ========== Base Styles ========== */
+body {
+    background-color: #fcfcfc;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* ========== Navigation ========== */
+.navbar {
+    background-color: #222;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.4em;
+    color: white;
+    text-decoration: none;
+}
+
+.nav-links a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.2s, text-decoration 0.2s;
+}
+
+.nav-links a:hover {
+    color: #ddd;
+    text-decoration: underline;
+}
+
+.nav-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: white;
+    display: none;
+}
+
+/* Responsive Toggle */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        margin-top: 10px;
+    }
+    .nav-links.show {
+        display: flex;
+    }
+    .nav-toggle {
+        display: block;
+    }
+}
+
+/* ========== Container & Layout ========== */
+.container {
+    width: 100%;
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+.col-md-6 {
+    width: 100%;
+    padding: 15px;
+}
+
+@media (min-width: 768px) {
+    .col-md-6 {
+        width: 50%;
+    }
+}
+
+.align-items-center {
+    align-items: center;
+    display: flex;
+}
+
+/* ========== Footer ========== */
+.blog-footer {
+    margin-top: 60px;
+    padding: 20px 0;
+    background: #222;
+    color: white;
+    text-align: center;
+}
+
+/* ========== Spacing Utilities ========== */
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.mb-5 {
+    margin-bottom: 3rem;
+}
+
+.mt-5 {
+    margin-top: 3rem;
+}
+
+.pt-5 {
+    padding-top: 3rem;
+}
+
+/* ========== Text Utilities ========== */
+.fw-bold {
+    font-weight: bold;
+}
+
+.text-center {
+    text-align: left;
+}
+
+/* ========== Button ========== */
+.read-btn {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+
+        /* Outline-dark styling */
+    border: 1px solid #333;
+    background-color: transparent;
+    color: #333;
+}
+
+.read-btn:hover {
+ background-color: #333;
+    color: #fff;
+}
+
+
+
+
+/* ========== Images ========== */
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+    display: flex;
+    align-items: flex-start;
+    
+}
+
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+  
+}
+.float-right {
+  float: right;
+  margin-left: 15px; /* space between image and text */
+}
+.small-img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin-left: auto; /* align image to right */
+  display: block;
+}
+
+.rounded {
+    border-radius: 1.9rem;
+}
+
+.shadow {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.zoom-img {
+    transition: transform 0.3s ease;
+}
+
+.zoom-img:hover {
+    transform: scale(1.1);
+}
+
+/* ========== Image Gallery ========== */
+/* ========== Gallery ========== */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-top: 2rem;
+    padding: 0;
+}
+
+.gallery-item {
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.gallery-item img {
+    width: 100%;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item img:hover {
+    transform: scale(1.03);
+}
+
+.gallery-item .title {
+    font-size: 1.1rem;
+    margin-top: 0.7rem;
+    color: #222;
+}
+
+.gallery-item .price {
+    color: #555;
+    font-size: 0.95rem;
+    margin-top: 0.3rem;
+}
+
+.blog-container {
+  width: 90%;
+  margin: auto;
+}
+
+.post-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.post-text {
+  flex: 1;
+  min-width: 280px;
+}
+
+.post-image {
+  flex: 1;
+  text-align: right;
+  min-width: 200px;
+}
+
+.post-image img {
+  max-width: 100%;
+  height: auto;
+  width: 300px; /* smaller image size */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+

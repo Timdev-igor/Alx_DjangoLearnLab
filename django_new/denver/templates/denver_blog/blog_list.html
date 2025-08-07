@@ -2,16 +2,19 @@
 {% block content %}
 <h1 class="mb-4">Blog</h1>
 
-<div class="container">
+<div class="blog-container">
   {% for post in posts %}
-    <div class="row mb-5 align-items-center">
-      <div class="col-md-6">
-        <h2 class="fw-bold">{{ post.title|upper }}</h2>
+    <div class="post-row">
+      <!-- Text section -->
+      <div class="post-text">
+        <h2>{{ post.title|upper }}</h2>
         <p>{{ post.description }}</p>
-        <a href="{% url 'blog_detail' post.slug %}" class="btn btn-outline-dark">Read</a>
+        <a href="{% url 'blog_detail' post.slug %}" class="read-btn">Read</a>
       </div>
-      <div class="col-md-6">
-        <img src="{{ post.image.url }}" class="img-fluid rounded shadow" alt="{{ post.title }}">
+
+      <!-- Image section -->
+      <div class="post-image">
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="zoom-img" >
       </div>
     </div>
   {% endfor %}

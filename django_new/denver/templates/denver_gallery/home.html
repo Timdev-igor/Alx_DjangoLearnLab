@@ -1,24 +1,42 @@
 {% extends 'denver_gallery/base.html' %}
+{% load static %}
+
 {% block content %}
-<a class="btn btn-primary mb-3" href="{% url 'upload' %}">Upload Photo</a>
+<div class="container mt-4">
 
-<form method="get">
-  <select name="category" onchange="this.form.submit()">
-    <option value="">All Categories</option>
-    {% for cat in categories %}
-      <option value="{{ cat.id }}">{{ cat.name }}</option>
+  <!-- Upload Button -->
+  <a class="btn btn-outline-dark mb-4" href="{% url 'upload' %}">Upload Photo</a>
+
+  <!-- Category Filter -->
+  <form method="get" class="mb-4">
+    <select name="category" onchange="this.form.submit()" class="form-select" style="max-width: 300px;">
+      <option value="">All Categories</option>
+      {% for cat in categories %}
+        <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+          {{ cat.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
+
+  <!-- Image Gallery Grid -->
+  <div class="gallery-grid">
+    {% for photo in photos %}
+      <div class="gallery-item">
+        <a href="{% url 'photo_detail' photo.pk %}">
+          <img src="{{ photo.image.url }}" alt="Photo" class="img-fluid rounded shadow">
+        </a>
+        {% if photo.title %}
+          <div class="title mt-2">{{ photo.title }}</div>
+        {% endif %}
+        <div class="price mt-1">
+          <a href="{% url 'blog_list' %}" class="btn btn-sm btn-outline-dark">Blog</a>
+        </div>
+      </div>
+    {% empty %}
+      <p>No photos available.</p>
     {% endfor %}
-  </select>
-</form>
+  </div>
 
-<div class="row mt-3">
-  {% for photo in photos %}
-    <div class="col-md-3 mb-3">
-      <a href="{% url 'photo_detail' photo.pk %}">
-        <img src="{{ photo.image.url }}" class="img-fluid">
-      </a>
-      <a href="{% url 'blog_list' %}">Blog</a>
-    </div>
-  {% endfor %}
 </div>
 {% endblock %}

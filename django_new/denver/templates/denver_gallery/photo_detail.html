@@ -1,7 +1,7 @@
 {% extends 'denver_gallery/base.html' %}
 {% block content %}
 <h2>{{ photo.title }}</h2>
-<img src="{{ photo.image.url }}" class="img-fluid">
+<img src="{{ photo.image.url }}" class="img-fluid rounded shadow ">
 <p>{{ photo.description }}</p>
 <p>Category: {{ photo.category }}</p>
 <p>Uploaded at: {{ photo.uploaded_at }}</p>

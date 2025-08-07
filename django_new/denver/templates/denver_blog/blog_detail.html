@@ -1,6 +1,8 @@
 {% extends 'denver_blog/base.html' %}
 {% block content %}
+<div class = "clearfix" >
 <h1>{{ post.title }}</h1>
-<img src="{{ post.image.url }}" class="img-fluid">
+<img src="{{ post.image.url }}" class="img-fluid rounded shadow " >
 <p>{{ post.description }}</p>
+</div>
 {% endblock %}
