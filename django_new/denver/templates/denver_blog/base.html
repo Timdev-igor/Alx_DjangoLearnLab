@@ -5,25 +5,22 @@
     <title>{% block title %}My Blog{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Load static files -->
     {% load static %}
-
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
 <!-- Navigation -->
 <nav class="navbar">
-  <div class="container">
-    <a class="navbar-brand" href="{% url 'home' %}">MySite</a>
-    <div class="nav-links" id="navbarNav">
-      <a href="{% url 'home' %}">Home</a>
-      <a href="{% url 'blog_list' %}">Blog</a>
-      <a href="/admin/">Admin</a>
+    <div class="navbar-content">
+        <a class="navbar-brand" href="{% url 'home' %}">MySite</a>
+        <div class="nav-links" id="navbarNav">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'blog_list' %}">Blog</a>
+            <a href="/admin/">Admin</a>
+        </div>
+        <button id="navToggle" class="nav-toggle">☰</button>
     </div>
-    <button id="navToggle" class="nav-toggle">☰</button>
-  </div>
 </nav>
 
 <!-- Main Content -->
@@ -33,10 +30,11 @@
 
 <!-- Footer -->
 <footer class="blog-footer">
-  <p>&copy; 2025 MySite. All rights reserved.</p>
+    <div class="footer-content">
+        <p>&copy; 2025 MySite. All rights reserved.</p>
+    </div>
 </footer>
 
-<!-- Custom JS -->
 <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

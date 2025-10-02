@@ -24,3 +24,15 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+class PlayList_Album(models.Model):
+    image = models.ImageField(upload_to='blog_images/')
+    title = models.TextField()
+    artist_details= models.TextField()
+    producer_details = models.TextField()
+    release_date = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(unique=True)
+
+class music_play(models.Model):
+    image = models.ImageField(upload_to='blog_images/')
+    title = models.TextField()
+    

@@ -1,4 +1,4 @@
-{% extends 'denver_gallery/base.html' %}
+{% extends 'denver_blog/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -27,10 +27,10 @@
           <img src="{{ photo.image.url }}" alt="Photo" class="img-fluid rounded shadow">
         </a>
         {% if photo.title %}
-          <div class="title mt-2">{{ photo.title }}</div>
+          <div class="">{{ photo.title }}</div>
         {% endif %}
-        <div class="price mt-1">
-          <a href="{% url 'blog_list' %}" class="btn btn-sm btn-outline-dark">Blog</a>
+        <div>
+          <a href="{% url 'photo_detail' photo.pk %}" class="read-btn">details</a>
         </div>
       </div>
     {% empty %}

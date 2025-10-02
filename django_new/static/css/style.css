@@ -1,18 +1,25 @@
 /* ========== Base Styles ========== */
+
 body {
     background-color: #fcfcfc;
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
     padding: 0;
+    padding-bottom: 80px; /* space for footer */
 }
 
 /* ========== Navigation ========== */
 .navbar {
-    background-color: #222;
+     background-color: #222;
     color: white;
-    padding: 15px 20px;
+    width: 100%;
+}
+/* Full-width navbar */
+.navbar-content {
+    width: 100%;
+    list-style: none;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -45,7 +52,7 @@ body {
 }
 
 /* Responsive Toggle */
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .nav-links {
         display: none;
         flex-direction: column;
@@ -80,7 +87,7 @@ body {
     padding: 15px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 800px) {
     .col-md-6 {
         width: 50%;
     }
@@ -93,11 +100,15 @@ body {
 
 /* ========== Footer ========== */
 .blog-footer {
-    margin-top: 60px;
     padding: 20px 0;
     background: #222;
     color: white;
     text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* makes sure it stays above content */
 }
 
 /* ========== Spacing Utilities ========== */
