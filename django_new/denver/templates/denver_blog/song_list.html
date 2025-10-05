@@ -1,0 +1,10 @@
+{% extends 'denver_blog/base.html' %}
+{% block content %}
+<ul>
+    {% for song in songs %}
+        <li>
+            <a href="{% url 'song_detail' song.pk %}">{{ song.song_title }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

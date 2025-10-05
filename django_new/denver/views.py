@@ -4,7 +4,7 @@
 #create views LOG 6
 
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Photo, Category , BlogPost
+from .models import Photo, Category , BlogPost ,Song
 from .forms import PhotoForm
 
 def home(request):
@@ -37,5 +37,11 @@ def blog_detail(request, slug):
     post = get_object_or_404(BlogPost, slug=slug)
     return render(request, 'denver_blog/blog_detail.html', {'post': post})
 
+def song_list(request):
+    songs = Song.objects.all()
+    return render(request, 'denver_blog/song_list.html', {'songs': songs})
 
+def song_detail(request, pk):
+    song = get_object_or_404(Song, pk=pk)
+    return render(request, 'denver_blog/song_detail.html', {'song': song})
 

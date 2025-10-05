@@ -1,5 +1,5 @@
 from django import forms
-from .models import Photo , PlayList_Album
+from .models import Photo 
 
 # created forms ------- LOG 5
 class PhotoForm(forms.ModelForm):
@@ -7,8 +7,3 @@ class PhotoForm(forms.ModelForm):
         model = Photo
         fields = ['title', 'image', 'description', 'category']
 
-class PlayList_Album(forms.ModelForm):
-
-    class Meta:
-        model = PlayList_Album
-        fields = [ 'title','image','artist_details','producer_details' ]

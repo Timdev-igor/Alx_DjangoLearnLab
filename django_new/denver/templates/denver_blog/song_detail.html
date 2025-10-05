@@ -1,0 +1,17 @@
+{% extends 'denver_blog/base.html' %}
+{% block content %}
+  <h2>{{ song.song_title }}</h2>
+
+  {% if song.song_file %}
+      <audio controls>
+          <source src="{{ song.song_file.url }}" type="audio/mpeg">
+          Your browser does not support the audio element.
+      </audio>
+  {% else %}
+      <p>No audio file available.</p>
+  {% endif %}
+
+  {% if song.concert %}
+      <p>From concert: {{ song.concert }}</p>
+  {% endif %}
+{% endblock %}

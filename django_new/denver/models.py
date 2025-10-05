@@ -24,15 +24,22 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
-class PlayList_Album(models.Model):
-    image = models.ImageField(upload_to='blog_images/')
-    title = models.TextField()
-    artist_details= models.TextField()
-    producer_details = models.TextField()
-    release_date = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(unique=True)
-
-class music_play(models.Model):
-    image = models.ImageField(upload_to='blog_images/')
-    title = models.TextField()
     
+
+class Concert(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+class Song(models.Model):
+    concert = models.ForeignKey(Concert, on_delete=models.CASCADE)
+    song_title = models.CharField(max_length=100)
+    song_file = models.FileField(upload_to='songs/')
+
+    def __str__(self):
+        return self.song_title
+
+
+

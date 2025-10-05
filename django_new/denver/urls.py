@@ -8,4 +8,7 @@ urlpatterns = [
     path('upload/', views.upload_photo, name='upload'),
     path('blog/', views.blog_list, name='blog_list'),
     path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
+    path('songs/', views.song_list, name='song_list'),
+    path('song/<int:pk>/', views.song_detail, name='song_detail'),
+
 ]
