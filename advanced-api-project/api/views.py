@@ -3,7 +3,8 @@ from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Book
 from .serializers import BookSerializer
-from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 # ListView: Retrieve all books with filtering, searching, and ordering
 class BookListView(generics.ListAPIView):
@@ -26,8 +27,11 @@ class BookListView(generics.ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]  # Allow read-only for unauthenticated users
 
     # Add searching and ordering backends
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
     # Fields to search by
     search_fields = ['title', 'author']
 
