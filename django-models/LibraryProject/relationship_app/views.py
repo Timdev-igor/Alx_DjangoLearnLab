@@ -48,7 +48,7 @@ def register(request):
         if form.is_valid():
             user = form.save()  # Save the new user
             # Create a UserProfile for the user with a default role (e.g., 'Member')
-            UserProfile.objects.create(user=user, role='Member')
+            
             login(request, user)  # Log the user in after registration
             return redirect('home')  # Redirect to the home page
     else:
@@ -105,3 +105,6 @@ def delete_book(request, book_id):
         book.delete()
         return redirect('list_books')
     return render(request, 'relationship_app/confirm_delete.html', {'book': book})
+
+def home(request):
+    return render(request, 'relationship_app/base.html')

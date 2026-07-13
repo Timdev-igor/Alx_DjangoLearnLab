@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from django.contrib.auth.models import User
-from .models import Book
+from .models import Book  , Author
 
 class BookAPITests(APITestCase):
     def setUp(self):
@@ -15,11 +15,12 @@ class BookAPITests(APITestCase):
 
         # Log in the user using Django's login method
         self.client.login(username='tim', password='library123')
-
-        # Create a sample book with real-world examples
+        self.author = Author.objects.create(name='Kojima')
+        self.author2 = Author.objects.create(name='George Orwell') 
+        # Create a sample book with real-world example
         self.book = Book.objects.create(
             title='deathnote',
-            author='Kojima',
+            author= self.author,
             publication_year=2020,
             isbn='9780061120084'
         )
@@ -87,7 +88,7 @@ class BookAPITests(APITestCase):
         self.assertEqual(response.data['author'], 'Kojima')
         self.assertEqual(response.data['publication_year'], 2020)
         self.assertEqual(response.data['isbn'], '9780061120084')
-        self.assertEqual(response.data['genre'], 'Classic')  # Verify the new field
+        self.assertEqual(response.data['genre'], 'sci')   # Verify the new field
 
         # Check if the book was updated in the database
         updated_book = Book.objects.get(id=self.book.id)

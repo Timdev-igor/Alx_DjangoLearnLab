@@ -127,7 +127,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'useraccount.CustomUser'  # ✅ Ensure this matches your model
 #Add the custom backend to AUTHENTICATION_BACKENDS:
 AUTHENTICATION_BACKENDS = [
-    'your_app.auth_backends.EmailBackend',  # Custom email login backend
+    'useraccount.auth_backends.EmailBackend',  # Custom email login backend
     'django.contrib.auth.backends.ModelBackend',  # Default Django backend (keep this)
 ]
 

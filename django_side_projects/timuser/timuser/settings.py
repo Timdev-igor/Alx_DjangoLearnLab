@@ -132,3 +132,5 @@ AUTHENTICATION_BACKENDS = [
      "vagus.authentication.EmailBackend",  # ✅ Corrected,  # Use the custom authentication backend,email
     'django.contrib.auth.backends.ModelBackend',  # Fallback to the default backend
 ]
+
+LOGIN_URL = 'login'

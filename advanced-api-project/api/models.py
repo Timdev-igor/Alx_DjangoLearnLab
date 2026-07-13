@@ -13,6 +13,8 @@ class Book(models.Model):
     title = models.CharField(max_length=200)# Stores the book's title.
     publication_year = models.IntegerField() # Stores the year the book was published.
     author = models.ForeignKey(Author, related_name='books', on_delete=models.CASCADE)# Links to the Author model.
+    isbn = models.CharField(max_length=13,default='0000000000000')
+    genre = models.CharField(max_length=100, blank=True, default='')
 
     def __str__(self):
         return self.title

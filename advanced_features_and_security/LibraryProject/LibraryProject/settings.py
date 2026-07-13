@@ -37,8 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookshelf1.apps.Bookshelf1AppConfig', 
-    'relationship_app.apps.RelationshipAppConfig',
+    'bookshelf1', 
 
 ]
 
@@ -132,7 +131,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL =  '/accounts/profile'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
-AUTH_USER_MODEL = 'bookshelf.CustomUser'
+AUTH_USER_MODEL = 'bookshelf1.CustomUser'
 
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
