@@ -1,11 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import CustomUser,Library,Author
 
-# User Registration Form
+
 class UserRegisterForm(UserCreationForm):
-    # Add a role field to the form
     ROLE_CHOICES = [
         ('Admin', 'Admin'),
         ('Librarian', 'Librarian'),
@@ -14,18 +12,17 @@ class UserRegisterForm(UserCreationForm):
     role = forms.ChoiceField(choices=ROLE_CHOICES, required=True)
 
     class Meta:
-        model = User
-        fields = ['username', 'password1', 'password2', 'role']  # Include role in the form
+        model = CustomUser
+        fields = ['username', 'password1', 'password2', 'role']
 
     def save(self, commit=True):
-        # Save the user first
         user = super().save(commit=False)
+        user.role = self.cleaned_data['role']
         if commit:
             user.save()
-            # Create a UserProfile for the user with the selected role
-            UserProfile.objects.create(user=user, role=self.cleaned_data['role'])
         return user
-    
+
+
 class ExampleForm(forms.Form):
     """
     Example form for demonstration purposes.
@@ -45,10 +42,17 @@ class ExampleForm(forms.Form):
     )
 
     def clean_name(self):
-        """
-        Custom validation for the 'name' field.
-        """
         name = self.cleaned_data['name']
         if len(name) < 3:
             raise forms.ValidationError("Name must be at least 3 characters long.")
         return name
+
+class LibraryForm(forms.ModelForm):
+    class Meta:
+        model = Library
+        fields = ['name', 'books']
+
+class AuthorForm(forms.ModelForm):
+    class Meta:
+        model = Author
+        fields = ['name']

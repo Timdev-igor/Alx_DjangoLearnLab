@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-94549y)*b$0-u@55n3)+22a_&x5s5c69-uy#bh5*t@-kk77^@u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -59,7 +59,7 @@ TEMPLATES = [
     
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS':[BASE_DIR / 'relationship_app/templates'],
+        'DIRS': [BASE_DIR / 'bookshelf1' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,38 +129,29 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL =  '/accounts/profile'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/profile/'
+LOGOUT_REDIRECT_URL = '/login/'
 AUTH_USER_MODEL = 'bookshelf1.CustomUser'
 
+# --- Security settings ---
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = 'same-origin'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
 
-# Enforce HTTPS for cookies
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-# Enable the browser’s XSS filtering and help prevent cross-site scripting attacks
-SECURE_BROWSER_XSS_FILTER = True
-# Redirect all non-HTTPS requests to HTTPS
-SECURE_SSL_REDIRECT = True
-
-# Use a secure secret key
-SECRET_KEY = 'your-secure-secret-key'  # Replace with a strong, unique key
-
-# Set allowed hosts
-ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com'] 
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'",)
 CSP_STYLE_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'",)
 
-SECURE_SSL_REDIRECT = True
-
-# Enable HTTP Strict Transport Security (HSTS)
-SECURE_HSTS_SECONDS = 31536000  # 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-
-# Trust the X-Forwarded-Proto header from the proxy
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# HTTPS-only settings — only enforce these in production, not local dev
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

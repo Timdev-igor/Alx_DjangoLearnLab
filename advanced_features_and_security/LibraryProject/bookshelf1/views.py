@@ -1,23 +1,23 @@
 
-from django.http import HttpResponse
-  # Assuming you have a BookForm defined in forms.py
- # Assuming you have a Book model defined in models.py
-
-# Role Check Functions
-from django.shortcuts import render, redirect,get_object_or_404
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth import login  # Import for handling user login
-from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView  # Import for user registration form
-from .models import Book
-from django.views.generic.detail import DetailView 
-from .models import Library
-from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView
+from django.views.generic.detail import DetailView
 from django import forms
-from django.contrib.auth.decorators import permission_required
-from .models import Post
-from .forms import ExampleForm
+
+from .forms import UserRegisterForm, ExampleForm,LibraryForm,AuthorForm
+from .models import (
+    Book,
+    Author,
+    Library,
+    Librarian,
+    CustomUser,
+    Post,
+    BookSelection,
+)
 
 # Role-checking functions
 # Role-checking functions
@@ -29,6 +29,9 @@ def is_librarian(user):
 
 def is_member(user):
     return user.role == 'Member'
+
+def is_admin_or_librarian(user):
+    return user.is_authenticated and user.role in ('Admin', 'Librarian')
 
 # Views
 @user_passes_test(is_admin, login_url='/login/')
@@ -45,6 +48,18 @@ def member_view(request):
 
 # User Registration View
 
+@login_required
+def profile_view(request):
+    role = request.user.role
+    if role == 'Admin':
+        return redirect('admin_dashboard')
+    elif role == 'Librarian':
+        return redirect('librarian_dashboard')
+    elif role == 'Member':
+        return redirect('member_dashboard')
+    else:
+        return render(request, 'bookshelf/profile.html', {'user': request.user})
+
 # Role-checking functions
 @login_required
 def book_list(request):
@@ -58,9 +73,9 @@ class LibraryDetailView(DetailView):
     context_object_name = 'library'
 
 class SignUpView(CreateView):
-    form_class = UserCreationForm  # Django's built-in user creation form
+    form_class = UserRegisterForm  # Django's built-in user creation form
     success_url = reverse_lazy('login')  # Redirect to login page after successful signup
-    template_name = 'registration/signup.html'
+    template_name = 'bookshelf/signup.html'
 
 class BookForm(forms.ModelForm):
     class Meta:
@@ -68,50 +83,61 @@ class BookForm(forms.ModelForm):
         fields = ['title', 'author', 'publication_year']
 
 # Add a book (requires 'can_add_book' permission)**
-@permission_required('relationship_app.can_add_book', raise_exception=True)
+@login_required
+@user_passes_test(is_admin_or_librarian, login_url='/login/')
 def add_book(request):
-    """
-    View to add a new book. Only users with the 'can_add_book' permission can access this view.
-    """
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('list_books')
+            return redirect('book_list')
     else:
         form = BookForm()
     return render(request, 'bookshelf/book_form.html', {'form': form})
 
-# Edit a book (requires 'can_change_book' permission)**
-@permission_required('relationship_app.can_change_book', raise_exception=True)
+
+@login_required
+@user_passes_test(is_admin_or_librarian, login_url='/login/')
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
         form = BookForm(request.POST, instance=book)
         if form.is_valid():
             form.save()
-            return redirect('list_books')
+            return redirect('book_list')
     else:
         form = BookForm(instance=book)
     return render(request, 'bookshelf/book_form.html', {'form': form})
 
-# Delete a book (requires 'can_delete_book' permission)**
-@permission_required('relationship_app.can_delete_book', raise_exception=True)
+
+@login_required
+@user_passes_test(is_admin_or_librarian, login_url='/login/')
 def delete_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
         book.delete()
-        return redirect('list_books')
+        return redirect('book_list')
     return render(request, 'bookshelf/confirm_delete.html', {'book': book})
 
+
 @login_required
-@permission_required('relationship_app.can_view', raise_exception=True)
+def book_list(request):
+    books = Book.objects.all()
+    authors = Author.objects.all()
+    return render(request, 'bookshelf/book_list.html', {
+        'books': books,
+        "authors": authors,
+        'can_manage': request.user.role in ('Admin', 'Librarian'),
+    })
+
+@login_required
+@permission_required('bookshelf1.can_view', raise_exception=True)
 def view_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     return render(request, 'post_detail.html', {'post': post})
 
 @login_required
-@permission_required('relationship_app.can_create', raise_exception=True)
+@permission_required('bookshelf1.can_create', raise_exception=True)
 def create_post(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -121,7 +147,7 @@ def create_post(request):
     return render(request, 'create_post.html')
 
 @login_required
-@permission_required('relationship_app.can_edit', raise_exception=True)
+@permission_required('bookshelf1.can_edit', raise_exception=True)
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
@@ -132,7 +158,7 @@ def edit_post(request, post_id):
     return render(request, 'edit_post.html', {'post': post})
 
 @login_required
-@permission_required('relationship_app.can_delete', raise_exception=True)
+@permission_required('bookshelf1.can_delete', raise_exception=True)
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     post.delete()
@@ -165,3 +191,78 @@ def example_form_view(request):
     return render(request, 'bookshelf/example_form.html', {'form': form})
 
 
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('profile')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'bookshelf/register.html', {'form': form})
+
+def success_page(request):
+    return render(request, 'bookshelf/success.html')
+
+
+
+@login_required
+def select_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    BookSelection.objects.get_or_create(user=request.user, book=book)
+    return redirect('my_selections')
+
+
+@login_required
+def my_selections(request):
+    selections = BookSelection.objects.filter(user=request.user).select_related('book')
+    return render(request, 'bookshelf/my_selections.html', {'selections': selections})
+
+@login_required
+@user_passes_test(is_admin, login_url='/login/')
+def add_library(request):
+    if request.method == 'POST':
+        form = LibraryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('library_list')
+    else:
+        form = LibraryForm()
+    return render(request, 'bookshelf/library_form.html', {'form': form})
+
+
+@login_required
+def library_list(request):
+    libraries = Library.objects.all()
+    return render(request, 'bookshelf/library_list.html', {
+        'libraries': libraries,
+        'can_manage': request.user.role == 'Admin',
+    })
+
+@login_required
+def author_list(request):
+    authors = Author.objects.all()
+    return render(request, 'bookshelf/author_list.html', {
+        'authors': authors,
+        'can_manage': request.user.role in ('Admin', 'Librarian'),
+    })
+
+
+@login_required
+@user_passes_test(is_admin_or_librarian, login_url='/login/')
+def add_author(request):
+    if request.method == 'POST':
+        form = AuthorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('author_list')
+    else:
+        form = AuthorForm()
+    return render(request, 'bookshelf/author_form.html', {'form': form})
+
+@login_required
+@user_passes_test(is_admin, login_url='/login/')
+def user_list(request):
+    users = CustomUser.objects.all()
+    return render(request, 'bookshelf/user_list.html', {'users': users})

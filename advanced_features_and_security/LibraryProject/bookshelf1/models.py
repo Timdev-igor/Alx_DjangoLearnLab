@@ -1,21 +1,10 @@
 
-
-# Create your models here.
-
-
-
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
 # Define user roles
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import BaseUserManager
-from django.contrib.auth.models import BaseUserManager
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -64,12 +53,6 @@ class CustomUser(AbstractUser):
         return self.username
 
 
-# Automatically create a UserProfile when a new User is created
-@receiver(post_save, sender=CustomUser)
-def set_default_role(sender, instance, created, **kwargs):
-    if created:
-        instance.role = CustomUser.MEMBER
-        instance.save()
 
 #////////////////////////////////////////////////////////////////////////////////////
 class Post(models.Model):
@@ -126,3 +109,15 @@ class Librarian(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class BookSelection(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='selections')
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='selections')
+    selected_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'book')
+
+    def __str__(self):
+        return f"{self.user.username} selected {self.book.title}"
+    
