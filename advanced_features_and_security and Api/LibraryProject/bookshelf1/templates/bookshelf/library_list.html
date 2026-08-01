@@ -1,0 +1,17 @@
+{% extends "bookshelf/base.html" %}
+{% block content %}
+<h2>Libraries</h2>
+{% if can_manage %}
+    <a href="{% url 'add_library' %}">Add Library</a>
+{% endif %}
+<ul>
+{% for library in libraries %}
+    <li>
+        <a href="{% url 'library_detail' library.pk %}">{{ library.name }}</a>
+        ({{ library.books.count }} books)
+    </li>
+{% empty %}
+    <li>No libraries yet.</li>
+{% endfor %}
+</ul>
+{% endblock %}

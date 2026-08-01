@@ -1,0 +1,12 @@
+{% extends "bookshelf/base.html" %}
+{% block content %}
+<h2>My Selected Books</h2>
+<ul>
+{% for selection in selections %}
+    <li>{{ selection.book.title }} by {{ selection.book.author.name }} (selected {{ selection.selected_at|date:"M d, Y" }})</li>
+{% empty %}
+    <li>You haven't selected any books yet.</li>
+{% endfor %}
+</ul>
+<a href="{% url 'book_list' %}">Browse more books</a>
+{% endblock %}

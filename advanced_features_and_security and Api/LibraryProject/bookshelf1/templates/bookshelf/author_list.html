@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authors</title>
+</head>
+<body>
+
+<h1>Authors</h1>
+
+<a href="{% url 'add_author' %}">Add Author</a>
+
+<hr>
+
+{% if authors %}
+    <ul>
+        {% for author in authors %}
+            <li>{{ author.name }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No authors found.</p>
+{% endif %}
+
+</body>
+</html>
