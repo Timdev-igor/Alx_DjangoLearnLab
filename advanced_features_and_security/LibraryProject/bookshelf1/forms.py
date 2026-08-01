@@ -50,6 +50,7 @@ class ExampleForm(forms.Form):
 
 class LibraryForm(forms.ModelForm):
     class Meta:
+
         model = Library
         fields = ['name', 'books']
 
