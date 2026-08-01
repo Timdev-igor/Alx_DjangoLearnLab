@@ -4,6 +4,7 @@ from .models import CustomUser,Library,Author
 
 
 class UserRegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
     ROLE_CHOICES = [
         ('Admin', 'Admin'),
         ('Librarian', 'Librarian'),
@@ -13,15 +14,15 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'password1', 'password2', 'role']
+        fields = ['username','email', 'password1', 'password2', 'role']
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.role = self.cleaned_data['role']
+        user.email = self.cleaned_data['email']
         if commit:
             user.save()
         return user
-
 
 class ExampleForm(forms.Form):
     """
