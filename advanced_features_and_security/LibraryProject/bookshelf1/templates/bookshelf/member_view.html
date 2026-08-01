@@ -1,5 +1,15 @@
 {% extends "bookshelf/base.html" %}
 {% block content %}
 <h2>Member Dashboard</h2>
-<p>Welcome, Member!</p>
+<p>Welcome, {{ user.username }}!</p>
+
+<nav>
+    <a href="{% url 'book_list' %}">Browse Books</a>
+    <a href="{% url 'my_selections' %}">My Selections</a>
+</nav>
+
+<form method="post" action="{% url 'logout' %}" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit">Log out</button>
+</form>
 {% endblock %}

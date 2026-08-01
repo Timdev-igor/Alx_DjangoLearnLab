@@ -1,0 +1,22 @@
+{% extends "bookshelf/base.html" %}
+{% block content %}
+<h2>Users</h2>
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Date Joined</th>
+    </tr>
+    {% for u in users %}
+    <tr>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.role }}</td>
+        <td>{{ u.date_joined }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No users found.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

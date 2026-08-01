@@ -1,5 +1,18 @@
 {% extends "bookshelf/base.html" %}
 {% block content %}
 <h2>Admin Dashboard</h2>
-<p>Welcome, Admin!</p>
+<p>Welcome, {{ user.username }}!</p>
+
+<nav>
+    <a href="{% url 'book_list' %}">Manage Books</a>
+    <a href="{% url 'library_list' %}">Manage Libraries</a>
+    <a href="{% url 'author_list' %}">Manage Authors</a>
+    <a href="{% url 'user_list' %}">Manage Users</a>
+    <a href="/admin/">Django Admin</a>
+</nav>
+
+<form method="post" action="{% url 'logout' %}" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit">Log out</button>
+</form>
 {% endblock %}
