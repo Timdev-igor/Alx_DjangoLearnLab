@@ -2,7 +2,7 @@ from rest_framework import generics, permissions
 from rest_framework.exceptions import ValidationError
 
 from .models import Category, Product, Cart, CartItem, Order
-from .permissions import IsStaffOrReadOnly
+from .permissions import IsStaffOrReadOnly,IsOwner
 from .serializers import (
     CategorySerializer, ProductSerializer,
     CartSerializer, CartItemSerializer, OrderSerializer,
@@ -112,7 +112,7 @@ class OrderList(generics.ListCreateAPIView):
 
 class OrderDetail(generics.RetrieveAPIView):
     serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,IsOwner]
 
     def get_queryset(self):
         # scoped so customers can't view other customers' orders by guessing IDs
