@@ -43,8 +43,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'accounts',
     'store',
+    'drf_spectacular',
 
 ]
+
 AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
@@ -152,8 +154,14 @@ REST_FRAMEWORK = {
         'user': '60/minute',
         'checkout': '5/minute',
     },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
-
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'E-Commerce API',
+    'DESCRIPTION': 'A Django REST Framework e-commerce backend with JWT auth, cart, checkout, and orders.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 from datetime import timedelta
 
 SIMPLE_JWT = {

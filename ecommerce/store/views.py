@@ -10,11 +10,13 @@ from .serializers import (
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import viewsets
+from drf_spectacular.utils import extend_schema
 
 
 
 # ---------- Categories ----------
 
+@extend_schema(tags=["Categories"])
 class CategoryList(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -33,12 +35,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 
-# ---------- Products ----------
+
 class ProductPagination(PageNumberPagination):
     page_size = 12
     page_size_query_param = 'page_size'
     max_page_size = 50
-
+@extend_schema(tags=["Products"])
 class ProductList(generics.ListCreateAPIView):
     """
     Public: anyone can GET the catalog.
