@@ -9,6 +9,9 @@ from .serializers import (
 )
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import viewsets
+
+
 
 # ---------- Categories ----------
 
@@ -22,6 +25,12 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsStaffOrReadOnly]
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsStaffOrReadOnly]
+
 
 
 # ---------- Products ----------
