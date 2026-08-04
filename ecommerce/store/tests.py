@@ -1,3 +1,47 @@
-from django.test import TestCase
+from django.contrib.auth import get_user_model
+from rest_framework.test import APITestCase
+from rest_framework import status
+from .models import Category, Product
 
-# Create your tests here.
+User = get_user_model()
+
+
+class ProductAPITests(APITestCase):
+    def setUp(self):
+        self.staff = User.objects.create_user(
+            username="admin", email="admin@example.com", password="pass123", is_staff=True
+        )
+        self.customer = User.objects.create_user(
+            username="sarah", email="sarah@example.com", password="pass123"
+        )
+        self.category = Category.objects.create(name="Electronics", slug="electronics")
+
+    def test_anyone_can_list_products(self):
+        response = self.client.get("/api/products/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_customer_cannot_create_product(self):
+        self.client.force_authenticate(user=self.customer)
+        response = self.client.post("/api/products/", {
+            "name": "Mouse", "slug": "mouse", "price": 10,
+            "stock": 5, "category": "electronics",
+        })
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_staff_can_create_product(self):
+        self.client.force_authenticate(user=self.staff)
+        response = self.client.post("/api/products/", {
+            "name": "Mouse", "slug": "mouse", "price": 10,
+            "stock": 5, "category": "electronics",
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_checkout_decrements_stock(self):
+        product = Product.objects.create(
+            name="Keyboard", slug="keyboard", price=50, stock=5, category=self.category
+        )
+        self.client.force_authenticate(user=self.customer)
+        self.client.post("/api/cart/items/", {"product": product.id, "quantity": 2})
+        self.client.post("/api/orders/", {"shipping_address": "Nairobi"})
+        product.refresh_from_db()
+        self.assertEqual(product.stock, 3)
