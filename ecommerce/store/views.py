@@ -7,7 +7,8 @@ from .serializers import (
     CategorySerializer, ProductSerializer,
     CartSerializer, CartItemSerializer, OrderSerializer,
 )
-
+from rest_framework.throttling import ScopedRateThrottle
+from rest_framework.pagination import PageNumberPagination
 
 # ---------- Categories ----------
 
@@ -24,6 +25,10 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 # ---------- Products ----------
+class ProductPagination(PageNumberPagination):
+    page_size = 12
+    page_size_query_param = 'page_size'
+    max_page_size = 50
 
 class ProductList(generics.ListCreateAPIView):
     """
@@ -35,6 +40,7 @@ class ProductList(generics.ListCreateAPIView):
     permission_classes = [IsStaffOrReadOnly]
     filterset_fields = ["category", "is_active"]
     search_fields = ["name", "description"]
+    pagination_class = ProductPagination
 
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -85,6 +91,8 @@ class OrderList(generics.ListCreateAPIView):
     """
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'checkout'
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user).prefetch_related("items")
