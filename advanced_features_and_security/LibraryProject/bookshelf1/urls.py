@@ -14,6 +14,7 @@ urlpatterns = [
     path("login/", LoginView.as_view(template_name="bookshelf/login.html"), name="login"),
     path("logout/", LogoutView.as_view(template_name="bookshelf/logout.html"), name="logout"),
     path('register/', views.register, name='register'),
+    path('search/', views.search_books, name='search_books'),
 
    
     path("signup/", SignUpView.as_view(), name="signup"),
