@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+from celery.schedules import crontab
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -54,6 +54,13 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Nairobi'
+CELERY_BEAT_SCHEDULE = {
+    'flag-abandoned-carts-daily': {
+        'task': 'store.tasks.flag_abandoned_carts',
+        'schedule': crontab(hour=2, minute=0),  # runs daily at 2am
+        'kwargs': {'hours': 24},
+    },
+}
 
 # needed for the email tasks to actually send something
 DEFAULT_FROM_EMAIL = 'noreply@yourshop.com'

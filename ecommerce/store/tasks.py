@@ -1,7 +1,8 @@
 from celery import shared_task
 from django.core.mail import send_mail
 from django.conf import settings
-
+from datetime import timedelta
+from django.utils import timezone
 
 @shared_task(bind=True, max_retries=3, default_retry_delay=60)
 def send_order_confirmation_email(self, order_id):
@@ -11,6 +12,9 @@ def send_order_confirmation_email(self, order_id):
         order = Order.objects.select_related("user").prefetch_related("items__product").get(id=order_id)
     except Order.DoesNotExist:
         return
+
+    if not order.user.email:
+        return  # no address to send to — avoid Django's silent no-op masking this
 
     lines = [
         f"{item.quantity} x {item.product.name if item.product else 'Removed product'}"
@@ -34,7 +38,6 @@ def send_order_confirmation_email(self, order_id):
     except Exception as exc:
         raise self.retry(exc=exc)
 
-
 @shared_task
 def alert_low_stock(product_id, threshold=5):
     from .models import Product
@@ -51,3 +54,13 @@ def alert_low_stock(product_id, threshold=5):
             recipient_list=[settings.ADMIN_EMAIL],
             fail_silently=True,
         )
+@shared_task
+def flag_abandoned_carts(hours=24):
+    from .models import Cart
+
+    cutoff = timezone.now() - timedelta(hours=hours)
+    abandoned = Cart.objects.filter(items__isnull=False, created_at__lt=cutoff).distinct()
+    count = abandoned.count()
+    # for now just log it — later this could email the user a reminder
+    print(f"[Abandoned Cart Check] {count} cart(s) older than {hours}h with items still in them.")
+    return count
