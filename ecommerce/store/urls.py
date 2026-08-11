@@ -1,12 +1,15 @@
 from django.urls import path
 from . import views
 from rest_framework.routers import DefaultRouter
+from .views import convert_price
 
 router = DefaultRouter()
 router.register(r"categories-v2", views.CategoryViewSet, basename="category-v2")
 
 
 urlpatterns = [
+    path("orders/<int:order_id>/convert/", convert_price, name="order-convert"),
+    path("tasks/check-abandoned-carts/", views.trigger_abandoned_cart_check, name="trigger-abandoned-cart-check"),
     path("categories/", views.CategoryList.as_view(), name="category-list"),
     path("categories/<int:pk>/", views.CategoryDetail.as_view(), name="category-detail"),
 

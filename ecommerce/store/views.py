@@ -11,8 +11,55 @@ from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import viewsets
 from drf_spectacular.utils import extend_schema
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from .tasks import flag_abandoned_carts
+from rest_framework.response import Response
+from django.http import JsonResponse
+import httpx
+from rest_framework.permissions import IsAuthenticated
+from asgiref.sync import sync_to_async
 
 
+
+async def convert_price(request, order_id):
+    from .models import Order
+
+    is_authenticated = await sync_to_async(lambda: request.user.is_authenticated)()
+    if not is_authenticated:
+        return JsonResponse({"detail": "Authentication required"}, status=401)
+
+    user = await sync_to_async(lambda: request.user)()
+    target_currency = request.GET.get("currency", "KES")
+
+    get_order = sync_to_async(Order.objects.get)
+    try:
+        order = await get_order(id=order_id, user=user)
+    except Order.DoesNotExist:
+        return JsonResponse({"detail": "Order not found"}, status=404)
+
+    get_total = sync_to_async(order.total_price)
+    total_usd = await get_total()
+
+    async with httpx.AsyncClient() as client:
+        resp = await client.get("https://api.exchangerate-api.com/v4/latest/USD")
+        data = resp.json()
+        rate = data["rates"].get(target_currency, 1)
+
+    converted = round(float(total_usd) * rate, 2)
+
+    return JsonResponse({
+        "order_id": order.id,
+        "total_usd": str(total_usd),
+        "currency": target_currency,
+        "converted_total": converted,
+    })
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def trigger_abandoned_cart_check(request):
+    result = flag_abandoned_carts.delay(hours=0)
+    return Response({"task_id": result.id, "status": "queued"})
 
 # ---------- Categories ----------
 
