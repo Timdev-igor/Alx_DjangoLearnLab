@@ -2,7 +2,7 @@ from django.db import transaction
 from rest_framework import serializers
 
 from .models import Category, Product, Cart, CartItem, Order, OrderItem
-
+from .tasks import send_order_confirmation_email, alert_low_stock
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -116,4 +116,11 @@ class OrderSerializer(serializers.ModelSerializer):
             product.save(update_fields=["stock"])
 
         cart.items.all().delete()
+
+        transaction.on_commit(lambda: send_order_confirmation_email.delay(order.id))
+        for item in order.items.all():
+            if item.product and item.product.stock <= 5:
+                pid = item.product.id
+                transaction.on_commit(lambda pid=pid: alert_low_stock.delay(pid))
+
         return order

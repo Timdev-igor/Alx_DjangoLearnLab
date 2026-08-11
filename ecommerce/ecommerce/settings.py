@@ -44,8 +44,21 @@ INSTALLED_APPS = [
     'accounts',
     'store',
     'drf_spectacular',
+    'django_celery_beat',
+    'django_celery_results',
 
 ]
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Africa/Nairobi'
+
+# needed for the email tasks to actually send something
+DEFAULT_FROM_EMAIL = 'noreply@yourshop.com'
+ADMIN_EMAIL = 'you@example.com'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' 
 
 AUTH_USER_MODEL = 'accounts.User'
 
