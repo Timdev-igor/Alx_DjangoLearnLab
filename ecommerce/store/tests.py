@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from rest_framework.test import APITestCase
 from rest_framework import status
 from .models import Category, Product
@@ -45,3 +46,13 @@ class ProductAPITests(APITestCase):
         self.client.post("/api/orders/", {"shipping_address": "Nairobi"})
         product.refresh_from_db()
         self.assertEqual(product.stock, 3)
+
+    def test_category_list_caches(self):
+        cache.delete("category_list")
+        self.client.get("/api/categories/")
+        self.assertIsNotNone(cache.get("category_list"))
+
+    def test_category_cache_invalidates_on_create(self):
+        self.client.get("/api/categories/")
+        Category.objects.create(name="New", slug="new")
+        self.assertIsNone(cache.get("category_list"))

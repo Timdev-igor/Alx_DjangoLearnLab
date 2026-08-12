@@ -19,6 +19,8 @@ from django.http import JsonResponse
 import httpx
 from rest_framework.permissions import IsAuthenticated
 from asgiref.sync import sync_to_async
+from django.db.models import Prefetch
+from django.core.cache import cache
 
 
 
@@ -41,10 +43,15 @@ async def convert_price(request, order_id):
     get_total = sync_to_async(order.total_price)
     total_usd = await get_total()
 
-    async with httpx.AsyncClient() as client:
-        resp = await client.get("https://api.exchangerate-api.com/v4/latest/USD")
-        data = resp.json()
-        rate = data["rates"].get(target_currency, 1)
+    cache_key = f"exchange_rate:USD:{target_currency}"
+    rate = await sync_to_async(cache.get)(cache_key)
+
+    if rate is None:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get("https://api.exchangerate-api.com/v4/latest/USD")
+            data = resp.json()
+            rate = data["rates"].get(target_currency, 1)
+        await sync_to_async(cache.set)(cache_key, rate, 21600)
 
     converted = round(float(total_usd) * rate, 2)
 
@@ -68,6 +75,14 @@ class CategoryList(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsStaffOrReadOnly]
+
+    def list(self, request, *args, **kwargs):
+        data = cache.get("category_list")
+        if data is None:
+            response = super().list(request, *args, **kwargs)
+            cache.set("category_list", response.data, timeout=3600)
+            return response
+        return Response(data)
 
 
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -93,7 +108,7 @@ class ProductList(generics.ListCreateAPIView):
     Public: anyone can GET the catalog.
     Staff only: POST to add new products.
     """
-    queryset = Product.objects.filter(is_active=True)
+    queryset = Product.objects.filter(is_active=True).select_related("category")
     serializer_class = ProductSerializer
     permission_classes = [IsStaffOrReadOnly]
     filterset_fields = ["category", "is_active"]
@@ -115,7 +130,9 @@ class CartDetail(generics.RetrieveAPIView):
 
     def get_object(self):
         cart, _ = Cart.objects.get_or_create(user=self.request.user)
-        return cart
+        return Cart.objects.prefetch_related(
+            Prefetch("items", queryset=CartItem.objects.select_related("product"))
+        ).get(pk=cart.pk)
 
 
 class CartItemList(generics.ListCreateAPIView):
@@ -124,7 +141,7 @@ class CartItemList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         cart, _ = Cart.objects.get_or_create(user=self.request.user)
-        return cart.items.all()
+        return cart.items.select_related("product").all()
 
     def perform_create(self, serializer):
         cart, _ = Cart.objects.get_or_create(user=self.request.user)
@@ -153,7 +170,7 @@ class OrderList(generics.ListCreateAPIView):
     throttle_scope = 'checkout'
 
     def get_queryset(self):
-        return Order.objects.filter(user=self.request.user).prefetch_related("items")
+        return Order.objects.filter(user=self.request.user).prefetch_related("items__product")
 
     def get_serializer_context(self):
         return {"request": self.request}
@@ -165,4 +182,4 @@ class OrderDetail(generics.RetrieveAPIView):
 
     def get_queryset(self):
         # scoped so customers can't view other customers' orders by guessing IDs
-        return Order.objects.filter(user=self.request.user)
+        return Order.objects.filter(user=self.request.user).prefetch_related("items__product")
