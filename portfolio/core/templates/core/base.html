@@ -23,9 +23,9 @@
       <span class="nav-crumb" id="navCrumb">MENU<span class="slash">/</span></span>
     </div>
 
-    <a href="{% url 'core:home' %}" class="logo">OPAS TV</a>
+    <a href="{% url 'core:home' %}" class="logo">ANDRE</a>
 
-    <a href="{% url 'core:about' %}" class="nav-right">INDEX</a>
+    <a href="{% url 'core:about' %}" class="nav-right">About</a>
   </nav>
 
   <div class="nav-overlay" id="navOverlay">
@@ -70,12 +70,13 @@
     </div>
 
     <!-- mobile: simplified 4-item menu, shown only under 820px -->
-    <ul class="nav-mobile-links">
-      <li><a href="{% url 'projects:list' %}">Work</a></li>
-      <li><a href="{% url 'core:about' %}">About</a></li>
-      <li><a href="{% url 'blog:list' %}">Blog</a></li>
-      <li><a href="mailto:you@example.com">Contact</a></li>
-    </ul>
+   <ul class="nav-mobile-links">
+  <li><a href="{% url 'gallery:list' %}">Art</a></li>
+  <li><a href="{% url 'projects:list' %}">Software Dev</a></li>
+  <li><a href="{% url 'certificates:list' %}">Certificates</a></li>
+  <li><a href="{% url 'core:about' %}">About</a></li>
+  <li><a href="{% url 'blog:list' %}">Blog</a></li>
+</ul>
 
   </div>
 

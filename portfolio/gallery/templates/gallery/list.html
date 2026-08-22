@@ -15,7 +15,7 @@
 
   .gallery-banner{
     position:relative;
-    padding:56px 8vw 40px;
+    padding:calc(var(--nav-height) + 56px) 48px 56px;
     border-bottom:1px solid var(--g-line);
   }
 
@@ -139,7 +139,7 @@
   }
   @media (max-width:480px){
     .gallery{ column-count:1; }
-    .gallery-banner{ padding:40px 6vw 28px; }
+    .gallery-banner{ padding:calc(var(--nav-height) + 40px) 24px 40px; }
     .filters{ padding:22px 6vw; }
     .gallery-wrap{ padding:28px 6vw 56px; }
   }

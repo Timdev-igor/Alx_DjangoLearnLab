@@ -15,7 +15,7 @@
   .certs-wrap{
     max-width:1400px;
     margin:0 auto;
-    padding:56px 48px;
+    padding:calc(var(--nav-height) + 56px) 48px 56px;
   }
 
   .certs-wrap h1{
@@ -31,11 +31,15 @@
     gap:20px;
   }
 
-  .cert-card{ display:block; }
+  /* one grid cell per certificate — keeps the 5-column layout
+     correct even though each cert now also carries a hidden
+     checkbox + overlay inside this same div */
+  .cert-item{ display:contents; }
+
+  .cert-card{ display:block; cursor:pointer; }
 
   .cert-box{
     aspect-ratio:4/3;
-    border-radius:18px;
     overflow:hidden;
     background:var(--c-card-bg);
     display:flex;
@@ -47,7 +51,7 @@
   .cert-box img{
     width:100%;
     height:100%;
-    object-fit:cover;
+    object-fit:contain;
     display:block;
   }
 
@@ -64,11 +68,51 @@
     margin-top:2px;
   }
 
+  .lightbox-toggle{
+    display:none;
+  }
+
+  .lightbox-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:200;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,0.85);
+    cursor:pointer;
+  }
+
+  /* scoped to just THIS cert-item's checkbox + overlay, since
+     .cert-item is their shared parent — this is what stops one
+     certificate's checkbox from revealing every other cert's
+     overlay too (the bug in the previous version) */
+  .cert-item .lightbox-toggle:checked ~ .lightbox-overlay{
+    display:flex;
+  }
+
+  .lightbox-image{
+    max-width:90vw;
+    max-height:88vh;
+    object-fit:contain;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    cursor:default;
+  }
+
+  .lightbox-close{
+    position:absolute;
+    top:24px;
+    right:32px;
+    font-size:36px;
+    color:#fff;
+    line-height:1;
+  }
+
   @media (max-width:1000px){
     .certs-row{ grid-template-columns:repeat(3, 1fr); row-gap:32px; }
   }
   @media (max-width:600px){
-    .certs-wrap{ padding:40px 24px; }
+    .certs-wrap{ padding:calc(var(--nav-height) + 40px) 24px 40px; }
     .certs-row{ grid-template-columns:repeat(2, 1fr); }
   }
 </style>
@@ -81,13 +125,21 @@
 
     <div class="certs-row">
       {% for cert in certificates %}
-        <div class="cert-card">
+      <div class="cert-item">
+        <label class="cert-card" for="cert-lightbox-{{ cert.id }}">
           <div class="cert-box">
             <img src="{{ cert.image.url }}" alt="{{ cert.title }}" loading="lazy">
           </div>
           <div class="cert-label">{{ cert.title }}</div>
           {% if cert.issuer %}<div class="cert-issuer">{{ cert.issuer }}</div>{% endif %}
-        </div>
+        </label>
+
+        <input type="checkbox" id="cert-lightbox-{{ cert.id }}" class="lightbox-toggle">
+        <label for="cert-lightbox-{{ cert.id }}" class="lightbox-overlay">
+          <span class="lightbox-close">×</span>
+          <img src="{{ cert.image.url }}" alt="{{ cert.title }}" class="lightbox-image">
+        </label>
+      </div>
       {% empty %}
         <p class="empty-state">No certificates yet.</p>
       {% endfor %}
