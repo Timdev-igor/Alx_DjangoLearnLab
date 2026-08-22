@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Opas TV{% endblock %}</title>
+{% load static %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Space+Mono:wght@400;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <nav class="site-nav">
+    <div class="nav-left">
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+      </button>
+      <span class="nav-crumb" id="navCrumb">MENU<span class="slash">/</span></span>
+    </div>
+
+    <a href="{% url 'core:home' %}" class="logo">OPAS TV</a>
+
+    <a href="{% url 'core:about' %}" class="nav-right">INDEX</a>
+  </nav>
+
+  <div class="nav-overlay" id="navOverlay">
+
+    <!-- desktop: full 5-column menu -->
+    <div class="nav-columns">
+      <div>
+        <div class="nav-col-title">Work</div>
+        <ul class="nav-links">
+          <li><a href="{% url 'projects:list' %}">Projects</a></li>
+          <li><a href="{% url 'gallery:list' %}">Gallery</a></li>
+          <li><a href="{% url 'certificates:list' %}">Certificates</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="nav-col-title">About</div>
+        <ul class="nav-links">
+          <li><a href="{% url 'core:about' %}">Bio</a></li>
+          <li><a href="{% url 'core:about' %}#resume">Resume</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="nav-col-title">Blog</div>
+        <ul class="nav-links">
+          <li><a href="{% url 'blog:list' %}">All Posts</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="nav-col-title">Contact</div>
+        <ul class="nav-links">
+          <li><a href="mailto:you@example.com">Email</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="nav-col-title">Extras</div>
+        <ul class="nav-links">
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Now</a></li>
+          <li><a href="#">Uses</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- mobile: simplified 4-item menu, shown only under 820px -->
+    <ul class="nav-mobile-links">
+      <li><a href="{% url 'projects:list' %}">Work</a></li>
+      <li><a href="{% url 'core:about' %}">About</a></li>
+      <li><a href="{% url 'blog:list' %}">Blog</a></li>
+      <li><a href="mailto:you@example.com">Contact</a></li>
+    </ul>
+
+  </div>
+
+  <!-- ============ PAGE CONTENT ============ -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <span class="logo">OPAS TV</span>
+        <p>Backend engineer building in public — Django, DRF and cloud infrastructure by day, THRENODY's world by night.</p>
+        <div class="footer-social">
+          <a href="#">Instagram</a>
+          <a href="#">Freelancer</a>
+          <a href="#">Upwork</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <ul class="footer-links">
+          <li><a href="{% url 'core:home' %}">Home</a></li>
+          <li><a href="{% url 'projects:list' %}">Work</a></li>
+          <li><a href="{% url 'blog:list' %}">Blog</a></li>
+          <li><a href="{% url 'core:about' %}">About</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul class="footer-links">
+          <li><a href="#">Backend Development</a></li>
+          <li><a href="#">API Design</a></li>
+          <li><a href="#">Cloud Deployment</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-newsletter">
+        <h4>Stay in the loop</h4>
+        <p>Occasional notes on what I'm building — no spam.</p>
+        <form onsubmit="return false;">
+          <input type="email" placeholder="Email">
+          <button type="submit" aria-label="Subscribe">→</button>
+        </form>
+        <p style="margin-top:24px;">
+          Gilgil, Nakuru County<br>Kenya
+        </p>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {% now "Y" %} Opas TV. All rights reserved.</p>
+      <ul class="footer-legal">
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Copyright</a></li>
+        <li><a href="mailto:you@example.com">Email me</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    /* ---------- nav toggle ---------- */
+    const toggle = document.getElementById('navToggle');
+    const overlay = document.getElementById('navOverlay');
+    const crumb = document.getElementById('navCrumb');
+
+    function setMenuState(open){
+      toggle.classList.toggle('is-open', open);
+      overlay.classList.toggle('is-open', open);
+      crumb.innerHTML = open
+        ? 'CLOSE<span class="slash">/</span>'
+        : 'MENU<span class="slash">/</span>';
+    }
+
+    toggle.addEventListener('click', () => {
+      setMenuState(!overlay.classList.contains('is-open'));
+    });
+
+    document.querySelectorAll('.nav-links a, .nav-mobile-links a').forEach(link => {
+      link.addEventListener('click', () => setMenuState(false));
+    });
+  </script>
+
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

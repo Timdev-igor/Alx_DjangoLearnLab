@@ -1,0 +1,97 @@
+{% extends "core/base.html" %}
+
+{% block title %}Certificates{% endblock %}
+
+{% block extra_css %}
+<style>
+  .certs-page{
+    --c-bg:#ffffff;
+    --c-fg:#111111;
+    --c-card-bg:#e9e7e2;
+    background:var(--c-bg);
+    color:var(--c-fg);
+  }
+
+  .certs-wrap{
+    max-width:1400px;
+    margin:0 auto;
+    padding:56px 48px;
+  }
+
+  .certs-wrap h1{
+    font-size:24px;
+    font-weight:700;
+    letter-spacing:-0.3px;
+    margin-bottom:24px;
+  }
+
+  .certs-row{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:20px;
+  }
+
+  .cert-card{ display:block; }
+
+  .cert-box{
+    aspect-ratio:4/3;
+    border-radius:18px;
+    overflow:hidden;
+    background:var(--c-card-bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:14px;
+  }
+
+  .cert-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .cert-label{
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:-0.1px;
+    color:var(--c-fg);
+  }
+
+  .cert-issuer{
+    font-size:13px;
+    color:#7a7a7a;
+    margin-top:2px;
+  }
+
+  @media (max-width:1000px){
+    .certs-row{ grid-template-columns:repeat(3, 1fr); row-gap:32px; }
+  }
+  @media (max-width:600px){
+    .certs-wrap{ padding:40px 24px; }
+    .certs-row{ grid-template-columns:repeat(2, 1fr); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="certs-page">
+  <div class="certs-wrap">
+    <h1>Certificates</h1>
+
+    <div class="certs-row">
+      {% for cert in certificates %}
+        <div class="cert-card">
+          <div class="cert-box">
+            <img src="{{ cert.image.url }}" alt="{{ cert.title }}" loading="lazy">
+          </div>
+          <div class="cert-label">{{ cert.title }}</div>
+          {% if cert.issuer %}<div class="cert-issuer">{{ cert.issuer }}</div>{% endif %}
+        </div>
+      {% empty %}
+        <p class="empty-state">No certificates yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

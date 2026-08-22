@@ -1,0 +1,187 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Opas TV — Home{% endblock %}
+
+{% block content %}
+
+  <!-- ============ HERO BANNER ============ -->
+  <section class="hero-banner">
+    <div class="hero-media">
+      <img src="{% static 'img/hero.jpg' %}" alt="Timothy Ochieng">
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-top">
+        <div class="eyebrow">Backend Developer / Creative</div>
+        <h1 class="hero-name">Timothy<br>Ochieng</h1>
+        <div class="hero-meta">
+          <p>Second-year CS Student, Karatina University</p>
+          <p>Nairobi, Kenya</p>
+        </div>
+      </div>
+
+      <a href="{% url 'core:about' %}" class="more-btn hero-more">
+        More about me <span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS (carousel, featured only) ============ -->
+  <div class="wrap">
+    <div class="proj-head">
+      <span class="label">Projects</span>
+      <div class="proj-head-right">
+        <a href="{% url 'projects:list' %}" class="proj-view-all">View all</a>
+        <div class="proj-arrows">
+          <button class="proj-arrow" id="projPrevBtn" aria-label="Previous project"><span class="chevron chevron-left"></span></button>
+          <button class="proj-arrow" id="projNextBtn" aria-label="Next project"><span class="chevron chevron-right"></span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-scroll" id="projScroll">
+      {% for project in featured_projects %}
+        <a href="{{ project.get_absolute_url }}" class="proj-tile">
+          <div class="proj-tile-image tone-dark">
+            <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" loading="lazy">
+          </div>
+          <div class="proj-tile-title">{{ project.title }}</div>
+        </a>
+      {% empty %}
+        <p class="empty-state">No featured projects yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- ============ PLAIN BANNER ============ -->
+  <div class="plain-banner">
+    <span class="placeholder-text">Image</span>
+    <!-- swap for a real <img> once you have a banner asset -->
+  </div>
+
+  <!-- ============ STATS ============ -->
+  <div class="wrap">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-number">8M+</div>
+        <p class="stat-desc">Placeholder line one of the stat description.<br>Placeholder line two goes here.</p>
+        <div class="stat-label">Media &amp; Entertainment</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">300M+</div>
+        <p class="stat-desc">Placeholder line one of the stat description.<br>Placeholder line two goes here.</p>
+        <div class="stat-label">Startups</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">120+</div>
+        <p class="stat-desc">Placeholder line one of the stat description.<br>Placeholder line two goes here.</p>
+        <div class="stat-label">Projects Shipped</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">40K+</div>
+        <p class="stat-desc">Placeholder line one of the stat description.<br>Placeholder line two goes here.</p>
+        <div class="stat-label">Lines of Code</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ NEWS / BLOG CAROUSEL ============ -->
+  <section class="news" id="news">
+    <div class="news-head">
+      <span class="label">Blog</span>
+    </div>
+
+    <div class="news-viewport">
+      <div class="news-track" id="newsTrack">
+        {% for post in latest_posts %}
+          <article class="news-card">
+            <div class="news-meta">
+              <span class="date">{{ post.published_at|date:"F j, Y" }}</span>
+            </div>
+            <h3 class="news-title">{{ post.title }}</h3>
+            <div class="news-image-wrap">
+              <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="lazy">
+            </div>
+          </article>
+        {% empty %}
+          <p class="empty-state">No posts yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="news-nav">
+      <a class="see-all" href="{% url 'blog:list' %}">See All</a>
+      <div class="nav-btns">
+        <button class="nav-btn" id="newsPrevBtn" aria-label="Previous update"><span class="chevron chevron-left"></span></button>
+        <button class="nav-btn" id="newsNextBtn" aria-label="Next update"><span class="chevron chevron-right"></span></button>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  /* ---------- projects carousel arrows ---------- */
+  const projScroll = document.getElementById('projScroll');
+  const projPrevBtn = document.getElementById('projPrevBtn');
+  const projNextBtn = document.getElementById('projNextBtn');
+
+  function updateProjArrows(){
+    if (!projScroll || !projScroll.querySelector('.proj-tile')) return;
+    const maxScroll = projScroll.scrollWidth - projScroll.clientWidth;
+    projPrevBtn.disabled = projScroll.scrollLeft <= 4;
+    projNextBtn.disabled = projScroll.scrollLeft >= maxScroll - 4;
+  }
+
+  function projTileStep(){
+    const tile = projScroll.querySelector('.proj-tile');
+    const gap = 24;
+    return tile.getBoundingClientRect().width + gap;
+  }
+
+  if (projScroll && projScroll.querySelector('.proj-tile')){
+    projPrevBtn.addEventListener('click', () => {
+      projScroll.scrollBy({ left: -projTileStep(), behavior: 'smooth' });
+    });
+    projNextBtn.addEventListener('click', () => {
+      projScroll.scrollBy({ left: projTileStep(), behavior: 'smooth' });
+    });
+    projScroll.addEventListener('scroll', updateProjArrows);
+    window.addEventListener('resize', updateProjArrows);
+    updateProjArrows();
+  }
+
+  /* ---------- news carousel ---------- */
+  const newsTrack = document.getElementById('newsTrack');
+  const newsCards = Array.from(document.querySelectorAll('.news-card'));
+  const prevBtn = document.getElementById('newsPrevBtn');
+  const nextBtn = document.getElementById('newsNextBtn');
+  let newsIndex = 0;
+
+  function updateNews(){
+    if (!newsCards.length) return;
+    const card = newsCards[0];
+    const cardWidth = card.getBoundingClientRect().width;
+    const gap = 40;
+    const offset = newsIndex * (cardWidth + gap);
+    newsTrack.style.transform = `translateX(-${offset}px)`;
+
+    newsCards.forEach((c, i) => c.classList.toggle('is-active', i === newsIndex));
+    prevBtn.disabled = newsIndex === 0;
+    nextBtn.disabled = newsIndex === newsCards.length - 1;
+  }
+
+  if (newsCards.length){
+    prevBtn.addEventListener('click', () => {
+      if (newsIndex > 0){ newsIndex--; updateNews(); }
+    });
+    nextBtn.addEventListener('click', () => {
+      if (newsIndex < newsCards.length - 1){ newsIndex++; updateNews(); }
+    });
+    window.addEventListener('resize', updateNews);
+    updateNews();
+  }
+</script>
+{% endblock %}

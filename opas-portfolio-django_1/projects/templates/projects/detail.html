@@ -1,0 +1,148 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .pv-page{
+    --pv-bg:#ffffff;
+    --pv-fg:#111111;
+    --pv-body:#3c4a5c;
+    background:var(--pv-bg);
+    color:var(--pv-fg);
+  }
+
+  .project-view{
+    max-width:1200px;
+    margin:0 auto;
+    padding:48px 32px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:44px;
+    align-items:start;
+  }
+
+  .pv-image{
+    position:relative;
+    aspect-ratio:3/2;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(224,33,43,0.18), transparent 55%),
+      #0a0a0a;
+  }
+
+  .pv-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .pv-image::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.15) 55%, transparent 75%);
+    pointer-events:none;
+  }
+
+  .pv-overlay{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    z-index:2;
+    padding:28px 32px 34px;
+    text-align:center;
+  }
+
+  .pv-overlay .lede{
+    font-size:14px;
+    font-weight:700;
+    line-height:1.5;
+    color:#ffffff;
+  }
+
+  .pv-content h2{
+    font-size:17px;
+    font-weight:700;
+    color:var(--pv-fg);
+    margin-bottom:18px;
+  }
+
+  .pv-content .body p{
+    font-size:13.5px;
+    line-height:1.65;
+    color:var(--pv-body);
+    margin-bottom:16px;
+    max-width:60ch;
+  }
+
+  .tag-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:20px 0;
+  }
+
+  .tag{
+    font-size:12px;
+    letter-spacing:0.3px;
+    color:var(--pv-fg);
+    border:1px solid #ddd;
+    padding:5px 12px;
+  }
+
+  .pv-links{
+    font-size:13px;
+  }
+
+  .pv-links a{
+    color:var(--pv-fg);
+    text-decoration:underline;
+  }
+
+  @media (max-width:900px){
+    .project-view{
+      grid-template-columns:1fr;
+      gap:28px;
+      padding:36px 20px;
+    }
+    .pv-image{ aspect-ratio:4/3; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pv-page">
+  <div class="project-view">
+
+    <!-- ============ LEFT: IMAGE + OVERLAY ============ -->
+    <div class="pv-image">
+      <img src="{{ project.cover_image.url }}" alt="{{ project.title }}">
+      <div class="pv-overlay">
+        <p class="lede">{{ project.summary }}</p>
+      </div>
+    </div>
+
+    <!-- ============ RIGHT: CONTENT ============ -->
+    <div class="pv-content">
+      <h2>{{ project.title }}</h2>
+      <div class="body">
+        {{ project.description|linebreaks }}
+      </div>
+
+      <div class="tag-row">
+        {% for tech in project.tech_list %}
+          <span class="tag">{{ tech }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="pv-links">
+        {% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener">Live site ↗</a>{% endif %}
+        {% if project.live_url and project.repo_url %} &nbsp;·&nbsp; {% endif %}
+        {% if project.repo_url %}<a href="{{ project.repo_url }}" target="_blank" rel="noopener">Source ↗</a>{% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

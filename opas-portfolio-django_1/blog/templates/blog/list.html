@@ -1,0 +1,173 @@
+{% extends "core/base.html" %}
+
+{% block title %}Blog{% endblock %}
+
+{% block extra_css %}
+<style>
+  .blog-list-page{
+    --b-bg:#e5e5e3;
+    --b-fg:#111111;
+    --b-muted:#4a4a4a;
+    --b-line:#111111;
+    background:var(--b-bg);
+    color:var(--b-fg);
+  }
+
+  .blog-top-bar{ height:6px; background:#000; }
+
+  .filter-bar{
+    padding:20px 7vw;
+    border-bottom:1px solid #ccc;
+  }
+
+  .filter-toggle{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-size:16px;
+    color:var(--b-fg);
+    cursor:pointer;
+    user-select:none;
+  }
+
+  .filter-toggle .caret{
+    width:0; height:0;
+    border-left:5px solid transparent;
+    border-right:5px solid transparent;
+    border-top:6px solid var(--b-fg);
+    margin-top:2px;
+  }
+
+  .blog-wrap{
+    max-width:1900px;
+    margin:0 auto;
+    padding:64px 7vw;
+  }
+
+  .post-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:5vw;
+    margin-bottom:88px;
+  }
+
+  .post-row:last-child{ margin-bottom:0; }
+
+  .post-content{ max-width:620px; flex:none; }
+
+  .post-image{
+    flex:none;
+    width:min(38vw, 520px);
+    aspect-ratio:2/1;
+    overflow:hidden;
+    background:#0a0a0a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .post-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .post-content h2{
+    font-size:38px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:-0.3px;
+    margin-bottom:16px;
+    line-height:1.1;
+  }
+
+  .post-content p{
+    font-size:16px;
+    line-height:1.5;
+    color:var(--b-muted);
+    max-width:44ch;
+    margin-bottom:22px;
+  }
+
+  .read-btn{
+    display:inline-block;
+    font-size:14px;
+    color:var(--b-fg);
+    background:none;
+    border:1px solid var(--b-line);
+    padding:9px 22px;
+    text-decoration:none;
+    transition:background 0.2s ease, color 0.2s ease;
+  }
+
+  .read-btn:hover{ background:#000; color:#fff; }
+
+  @media (max-width:900px){
+    .post-row{
+      flex-direction:column;
+      align-items:flex-start;
+      gap:24px;
+      margin-bottom:56px;
+    }
+    .post-content{ max-width:100%; }
+    .post-image{ width:100%; }
+  }
+
+  @media (max-width:480px){
+    .blog-wrap{ padding:40px 6vw; }
+    .filter-bar{ padding:16px 6vw; }
+    .post-content h2{ font-size:26px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="blog-list-page">
+
+  <div class="blog-top-bar"></div>
+
+  <div class="filter-bar">
+    <div class="filter-toggle">
+      <span>Filter</span>
+      <span class="caret"></span>
+    </div>
+  </div>
+
+  <div class="blog-wrap">
+
+    {% for post in posts %}
+      <div class="post-row">
+        <div class="post-image">
+          <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="lazy">
+        </div>
+        <div class="post-content">
+          <h2>{{ post.title }}</h2>
+          <p>{{ post.excerpt }}</p>
+          <a href="{{ post.get_absolute_url }}" class="read-btn">Read</a>
+        </div>
+      </div>
+    {% empty %}
+      <p class="empty-state">No posts yet.</p>
+    {% endfor %}
+
+    {% if is_paginated %}
+    <nav class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">← Prev</a>
+      {% else %}
+        <span class="page-link is-disabled">← Prev</span>
+      {% endif %}
+      <span class="page-status">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next →</a>
+      {% else %}
+        <span class="page-link is-disabled">Next →</span>
+      {% endif %}
+    </nav>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

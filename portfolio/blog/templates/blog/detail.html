@@ -1,0 +1,131 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .bv-page{
+    --bv-bg:#ffffff;
+    --bv-fg:#111111;
+    --bv-body:#3c4a5c;
+    background:var(--bv-bg);
+    color:var(--bv-fg);
+  }
+
+  .blog-view{
+    max-width:1200px;
+    margin:0 auto;
+    padding:48px 32px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:44px;
+    align-items:start;
+  }
+
+  .bv-image{
+    position:relative;
+    aspect-ratio:3/2;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(224,33,43,0.18), transparent 55%),
+      #0a0a0a;
+  }
+
+  .bv-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .bv-image::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.15) 55%, transparent 75%);
+    pointer-events:none;
+  }
+
+  .bv-overlay{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    z-index:2;
+    padding:28px 32px 34px;
+    text-align:center;
+  }
+
+  .bv-overlay .eyebrow{
+    font-family:Georgia, 'Times New Roman', serif;
+    font-style:italic;
+    font-weight:300;
+    font-size:18px;
+    color:#f2f2f2;
+    margin-bottom:12px;
+  }
+
+  .bv-overlay .lede{
+    font-size:14px;
+    font-weight:700;
+    line-height:1.5;
+    color:#ffffff;
+  }
+
+  .bv-content h2{
+    font-size:17px;
+    font-weight:700;
+    color:var(--bv-fg);
+    margin-bottom:18px;
+  }
+
+  .bv-content .body p{
+    font-size:13.5px;
+    line-height:1.65;
+    color:var(--bv-body);
+    margin-bottom:16px;
+    max-width:60ch;
+  }
+
+  .bv-content .back-link{
+    display:inline-block;
+    margin-top:12px;
+    font-size:13px;
+    color:var(--bv-fg);
+    text-decoration:underline;
+  }
+
+  @media (max-width:900px){
+    .blog-view{
+      grid-template-columns:1fr;
+      gap:28px;
+      padding:36px 20px;
+    }
+    .bv-image{ aspect-ratio:4/3; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bv-page">
+  <div class="blog-view">
+
+    <!-- ============ LEFT: IMAGE + OVERLAY ============ -->
+    <div class="bv-image">
+      <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+      <div class="bv-overlay">
+        <div class="eyebrow">{{ post.published_at|date:"F j, Y" }}</div>
+        <p class="lede">{{ post.excerpt }}</p>
+      </div>
+    </div>
+
+    <!-- ============ RIGHT: CONTENT ============ -->
+    <div class="bv-content">
+      <h2>{{ post.title }}</h2>
+      <div class="body">
+        {{ post.body|linebreaks }}
+      </div>
+      <a href="{% url 'blog:list' %}" class="back-link">← Back to journal</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

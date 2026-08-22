@@ -1,0 +1,110 @@
+{% extends "core/base.html" %}
+
+{% block title %}Work{% endblock %}
+
+{% block extra_css %}
+<style>
+  .projects-page{
+    --p-bg:#dadada;
+    --p-fg:#111111;
+    --p-muted:#7a7a7a;
+    background:var(--p-bg);
+    color:var(--p-fg);
+  }
+
+  .proj-wrap{
+    max-width:1400px;
+    margin:0 auto;
+    padding:64px 32px;
+  }
+
+  .proj-wrap h1{
+    font-size:26px;
+    font-weight:800;
+    letter-spacing:-0.4px;
+    margin-bottom:36px;
+  }
+
+  .proj-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px 32px;
+  }
+
+  .proj-card{
+    text-decoration:none;
+    color:inherit;
+    display:block;
+  }
+
+  .proj-card-image{
+    width:100%;
+    aspect-ratio:5/3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    margin-bottom:16px;
+    background:#0d0d0d;
+  }
+
+  .proj-card-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .proj-card-title{
+    font-size:18px;
+    font-weight:400;
+    color:var(--p-muted);
+  }
+
+  @media (max-width:1000px){
+    .proj-grid{ grid-template-columns:repeat(2, 1fr); }
+  }
+
+  @media (max-width:600px){
+    .proj-wrap{ padding:48px 20px; }
+    .proj-grid{ grid-template-columns:1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="projects-page">
+  <div class="proj-wrap">
+    <h1>Projects</h1>
+
+    <div class="proj-grid">
+      {% for project in projects %}
+        <a href="{{ project.get_absolute_url }}" class="proj-card">
+          <div class="proj-card-image">
+            <img src="{{ project.cover_image.url }}" alt="{{ project.title }}" loading="lazy">
+          </div>
+          <div class="proj-card-title">{{ project.title }}</div>
+        </a>
+      {% empty %}
+        <p class="empty-state">No projects yet.</p>
+      {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">← Prev</a>
+      {% else %}
+        <span class="page-link is-disabled">← Prev</span>
+      {% endif %}
+      <span class="page-status">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next →</a>
+      {% else %}
+        <span class="page-link is-disabled">Next →</span>
+      {% endif %}
+    </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
