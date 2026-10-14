@@ -5,7 +5,7 @@
 {% block extra_css %}
 <style>
   .view-page{
-    --v-bg:#e8e6dd;
+    --v-bg:#fffffe;
     --v-fg:#111111;
     --v-muted:#9a9890;
     background:var(--v-bg);
@@ -13,27 +13,33 @@
     padding:calc(var(--nav-height) + 56px) 48px 56px;
   }
 
-  .view{
-    display:grid;
-    grid-template-columns:2.3fr 1fr;
-    min-height:calc(100vh - var(--nav-height));
-  }
+.view{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  min-height:calc(100vh - var(--nav-height));
+}
 
-  .view-image{
-    
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-  }
+.view-image{
+  
+  display:flex;
+  align-items:left;
+  justify-content:left;
+  overflow:hidden;
+  padding:10px;
+}
+.view-image-box{
+  width:100%;
+  max-width:520px;
+  aspect-ratio:2/3;
+}
 
-  .view-image img{
-    width:70%;
-    height:70%;
-    object-fit:contain;
-    display:block;
-    
-  }
+.view-image img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
 
   .view-info{
     padding:56px 48px;
@@ -84,8 +90,10 @@
   <div class="view">
 
     <div class="view-image">
-      <img src="{{ artwork.image.url }}" alt="{{ artwork.title }}">
-    </div>
+  <div class="view-image-box">
+    <img src="{{ artwork.image.url }}" alt="{{ artwork.title }}">
+  </div>
+</div>
 
     <div class="view-info">
       <h1>{{ artwork.title }}</h1>

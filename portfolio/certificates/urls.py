@@ -7,3 +7,4 @@ app_name = "certificates"
 urlpatterns = [
     path("", views.CertificateListView.as_view(), name="list"),
 ]
+ 

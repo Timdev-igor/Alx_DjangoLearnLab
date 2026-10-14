@@ -41,7 +41,8 @@ body{
   align-items:center;
   height:var(--nav-height);
   padding:0 48px;
-  mix-blend-mode:difference;
+  background:#ffffff;
+  border-bottom:1px solid #e4e4e4;
 }
 
 .nav-left{
@@ -55,7 +56,7 @@ body{
   font-size:13px;
   letter-spacing:1px;
   text-transform:uppercase;
-  color:#ffffff;
+  color:#111111;
   user-select:none;
 }
 
@@ -69,7 +70,7 @@ body{
   font-size:13px;
   letter-spacing:1px;
   text-transform:uppercase;
-  color:#ffffff;
+  color:#111111;
   text-decoration:none;
 }
 
@@ -77,12 +78,12 @@ body{
   grid-column:2;
   justify-self:center;
   font-family:Georgia, 'Times New Roman', serif;
-  font-style:italic;
+  font-style:bold;
   font-weight:700;
   font-size:22px;
   letter-spacing:0.5px;
   text-decoration:none;
-  color:#ffffff;
+  color:#000000;
   cursor:pointer;
 }
 
@@ -90,7 +91,7 @@ body{
   position:relative;
   width:26px;
   height:14px;
-  background:none;
+  background:#000000;
   border:none;
   cursor:pointer;
   padding:0;
@@ -237,7 +238,7 @@ body{
   inset:0;
   background:
     linear-gradient(100deg, rgba(10,10,10,0.97) 0%, rgba(10,10,10,0.75) 32%, rgba(10,10,10,0.15) 60%, rgba(10,10,10,0.55) 100%),
-    radial-gradient(circle at 78% 30%, rgba(224,33,43,0.20), transparent 55%),
+    radial-gradient(circle at 78% 30%, rgba(224,33,43,0.20), transparent 5%),
     #050505;
 }
 
@@ -265,7 +266,7 @@ body{
   flex-direction:column;
   justify-content:space-between;
   float: left;
-  padding:70px 8vw 32px ;
+  padding:50px 8vw 30px ;
 }
 
 .hero-top .eyebrow{
